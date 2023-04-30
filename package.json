@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.6.7",
+    "@vueuse/core": "^10.1.0",
+    "@vueuse/nuxt": "^10.1.0",
+    "nuxt": "^3.4.3",
+    "nuxt-icon": "^0.4.0",
+    "pinceau": "^0.18.9",
+    "sass": "^1.62.1",
+    "typescript": "^5.0.4"
+  }
+}
