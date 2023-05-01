@@ -27,12 +27,16 @@ export function chordRegex() {
   const bass = `(?:\\/${notePattern})`;
 
   const lookahead = "(?=$| )";
-  const source = `${notePattern}${`(?:${altered}|${
-    `(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
+  const source = `${notePattern}${`(?:${altered}|${`(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
     `${mod}*${sus}?${mod}*${add}?`
-  })`}${bass}?${lookahead}`;
+    })`}${bass}?${lookahead}`;
 
   return source;
+}
+
+// custom mod to fix negative modulo
+function mod(n: number, m: number) {
+  return ((n % m) + m) % m;
 }
 
 export function transposeChord(chords: string, increment: number): string {
@@ -55,7 +59,7 @@ export function transposeChord(chords: string, increment: number): string {
           );
 
           const transposedNote =
-            chordSteps[(increment + index) % chordSteps.length];
+            chordSteps[mod(increment + index, chordSteps.length)];
 
           return chord.replace(
             noteRegex,
