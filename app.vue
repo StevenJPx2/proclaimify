@@ -58,7 +58,7 @@ const getRelativeChordSpacing = (targetScale: string) => {
       <button class="btn" @click="reset()">0</button>
       <button class="btn" @click="inc()">+1</button>
     </div>
-    <div class="grid gap-4 grid-cols-2">
+    <div class="grid gap-4 lg:grid-cols-2">
       <textarea
         class="border rounded resize-none font-mono"
         ref="textarea"
