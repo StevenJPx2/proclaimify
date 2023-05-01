@@ -1,17 +1,5 @@
-export const chordSteps: (string | [string, string])[] = [
-  "A",
-  ["A#", "Bb"],
-  "B",
-  "C",
-  ["C#", "Db"],
-  "D",
-  ["D#", "Eb"],
-  "E",
-  "F",
-  ["F#", "Gb"],
-  "G",
-  ["G#", "Ab"],
-];
+import { insetChords, linedChords } from "./lyricTypes";
+import { EncodedLyric } from "./lyricTypes/types";
 
 export const notePattern = "[A-G][b#]?";
 export function chordRegex() {
@@ -39,6 +27,12 @@ function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 
+export function findChordStepIndex(note: string) {
+  return chordSteps.findIndex((val) =>
+    Array.isArray(val) ? val.includes(note) : val === note
+  );
+}
+
 export function transposeChord(chords: string, increment: number): string {
   const splitChords = chords.match(new RegExp(chordRegex() + "\\s*", "g"));
 
@@ -54,9 +48,7 @@ export function transposeChord(chords: string, increment: number): string {
 
           if (!note) return chord;
 
-          const index = chordSteps.findIndex((val) =>
-            Array.isArray(val) ? val.includes(note[0]) : val === note[0]
-          );
+          const index = findChordStepIndex(note[0]);
 
           const transposedNote =
             chordSteps[mod(increment + index, chordSteps.length)];
@@ -70,3 +62,6 @@ export function transposeChord(chords: string, increment: number): string {
     })
     .join("");
 }
+
+export { linedChords, insetChords };
+export type { EncodedLyric };
