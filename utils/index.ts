@@ -61,7 +61,11 @@ export function transposeChord(chords: string, increment: number): string {
 
           return chord.replace(
             noteRegex,
-            Array.isArray(transposedNote) ? transposedNote[0] : transposedNote
+            Array.isArray(transposedNote)
+              ? note[0].includes("b")
+                ? transposedNote[1]
+                : transposedNote[0]
+              : transposedNote
           );
         })
         .join("/");
