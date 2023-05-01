@@ -134,7 +134,7 @@ const chordSteps: (string | [string, string])[] = [
   ["G#", "Ab"],
 ];
 
-const note = "[A-G][b#]?";
+const notePattern = "[A-G][b#]?";
 function chordRegex() {
   const altered = `(?:5|dim(5|7)?|aug5?|\\+5?|-5?)`;
   const minor = "(?:mi?n?)";
@@ -145,10 +145,10 @@ function chordRegex() {
   const mod = `(?:\\(${_mod}\\)|${_mod})`;
   const sus = "(?:sus(2|4|24|2sus4)?)";
   const add = "(?:add[b#]?(?:2|4|6|7|9|11|13))";
-  const bass = `(?:\\/${note})`;
+  const bass = `(?:\\/${notePattern})`;
 
   const lookahead = "(?=$| )";
-  const source = `${note}${`(?:${altered}|${
+  const source = `${notePattern}${`(?:${altered}|${
     `(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
     `${mod}*${sus}?${mod}*${add}?`
   })`}${bass}?${lookahead}`;
@@ -156,39 +156,62 @@ function chordRegex() {
   return source;
 }
 
-function transposeChord(chord: string, increment: number) {
-  const noteRegex = new RegExp(note, "g");
-  const allNotes = chord.match(noteRegex);
+function transposeChord(chords: string, increment: number): string {
+  const splitChords = chords.match(new RegExp(chordRegex() + "\\s*", "g"));
 
-  let adjustedChord = chord;
-  if (!allNotes) return chord;
-  Array.from(new Set(allNotes)).map((note) => {
-    const index = chordSteps.findIndex((val) =>
-      Array.isArray(val) ? val.includes(note) : val === note
-    );
+  if (!splitChords) return chords;
 
-    const transposedNote =
-      chordSteps[(increment + index) % (chordSteps.length - 1)];
+  return Array.from(splitChords)
+    .map((chordWBar) => {
+      return chordWBar
+        .split("/")
+        .map((chord) => {
+          const noteRegex = new RegExp(notePattern, "g");
+          const note = chord.match(noteRegex);
 
-    const transposedNoteNoArray = Array.isArray(transposedNote)
-      ? transposedNote[0]
-      : transposedNote;
+          if (!note) return chord;
 
-    [...adjustedChord.matchAll(new RegExp(note, "g"))]
-      .map((a) => a.index)
-      .filter((val) => !!val)
-      .forEach((index) => {
-        adjustedChord =
-          adjustedChord.slice(0, index) +
-          transposedNoteNoArray +
-          adjustedChord.slice(index! + transposedNoteNoArray.length);
-      });
-  });
-  return adjustedChord;
+          const index = chordSteps.findIndex((val) =>
+            Array.isArray(val) ? val.includes(note[0]) : val === note[0]
+          );
+
+          const transposedNote =
+            chordSteps[(increment + index) % chordSteps.length];
+
+          return chord.replace(
+            noteRegex,
+            Array.isArray(transposedNote) ? transposedNote[0] : transposedNote
+          );
+        })
+        .join("/");
+    })
+    .join("");
 }
 
 type EncodedLyric = { chord?: string; lyrics: [string, string] };
-type ChordLyricFormat = { encodeLyrics: (lyrics: string[]) => EncodedLyric[] };
+type ChordLyricFormat = {
+  encodeLyrics: (lyrics: string[]) => EncodedLyric[];
+  decodeLyrics: (encoded: EncodedLyric[]) => string;
+};
+
+// TODO: algo for encoding [Bb].....[A]...... lyrics
+const squaredChords: ChordLyricFormat = {
+  encodeLyrics(lyrics) {
+    return [];
+  },
+  decodeLyrics(encoded) {
+    return encoded
+      .map(
+        ({ lyrics, chord }) =>
+          `${lyrics[0]}${!!chord ? "[" + chord.trim() + "]" : ""}${lyrics[1]}`
+      )
+      .join("");
+  },
+};
+
+// TODO: algo for decoding encoded lyrics to:
+// Bb         A
+// ...................
 
 const linedChords: ChordLyricFormat = {
   encodeLyrics(lyrics) {
@@ -248,6 +271,9 @@ const linedChords: ChordLyricFormat = {
 
     return encodedLyrics;
   },
+  decodeLyrics(encoded) {
+    return "";
+  },
 };
 
 const encodedLyrics = computed<EncodedLyric[]>(() =>
@@ -262,18 +288,18 @@ const encodedLyrics = computed<EncodedLyric[]>(() =>
 );
 
 const changedLyrics = computed(() =>
-  encodedLyrics.value
-    .map(
-      ({ lyrics, chord }) =>
-        `${lyrics[0]}${!!chord ? "[" + chord.trim() + "]" : ""}${lyrics[1]}`
-    )
-    .join("")
+  squaredChords.decodeLyrics(encodedLyrics.value)
 );
 </script>
 
 <template>
   <main>
     <div class="flex items-center">
+      <input
+        type="number"
+        :value="count"
+        @change="(e) => set(parseInt((e.currentTarget as HTMLInputElement).value))"
+      />
       <button class="btn" @click="dec()">-1</button>
       <button class="btn" @click="reset()">0</button>
       <button class="btn" @click="inc()">+1</button>
@@ -298,5 +324,6 @@ const changedLyrics = computed(() =>
   @apply rounded;
   @apply border;
   @apply bg-gray-50;
+  @apply cursor-pointer;
 }
 </style>
