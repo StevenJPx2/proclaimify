@@ -35,7 +35,7 @@ const getRelativeChordSpacing = (targetScale: string) => {
         class="border px-4 py-2 rounded"
         type="text"
         id="scale"
-        v-model.lazy="scale"
+        v-model="scale"
       />
     </label>
     <div class="flex items-center gap-2 mb-4">
@@ -52,7 +52,7 @@ const getRelativeChordSpacing = (targetScale: string) => {
           class="border border-l-0 rounded-r w-8"
           type="type"
           :value="transposeChord(scale, count)"
-          @change="(e) => set(getRelativeChordSpacing((e.currentTarget as HTMLInputElement).value))"
+          @input="(e) => set(getRelativeChordSpacing((e.currentTarget as HTMLInputElement).value))"
         />
       </div>
       <button class="btn" @click="inc()">+1</button>
