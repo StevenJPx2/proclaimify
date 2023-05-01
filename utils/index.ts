@@ -15,9 +15,10 @@ export function chordRegex() {
   const bass = `(?:\\/${notePattern})`;
 
   const lookahead = "(?=$| )";
-  const source = `${notePattern}${`(?:${altered}|${`(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
+  const source = `${notePattern}${`(?:${altered}|${
+    `(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
     `${mod}*${sus}?${mod}*${add}?`
-    })`}${bass}?${lookahead}`;
+  })`}${bass}?${lookahead}`;
 
   return source;
 }
@@ -27,9 +28,14 @@ function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 
-export function findChordStepIndex(note: string) {
+export function findChordStepIndex(chord: string): number {
+  const noteRegex = new RegExp(notePattern, "g");
+  const note = chord.match(noteRegex);
+
+  if (!note) return 0;
+
   return chordSteps.findIndex((val) =>
-    Array.isArray(val) ? val.includes(note) : val === note
+    Array.isArray(val) ? val.includes(note[0]) : val === note[0]
   );
 }
 

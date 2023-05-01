@@ -28,7 +28,7 @@ const getRelativeChordSpacing = (targetScale: string) => {
 </script>
 
 <template>
-  <main>
+  <main class="max-w-screen-lg w-full mx-auto px-3">
     <label for="scale" class="mb-3 block">
       Scale:
       <input
@@ -38,7 +38,7 @@ const getRelativeChordSpacing = (targetScale: string) => {
         v-model.lazy="scale"
       />
     </label>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 mb-4">
       <button class="btn" @click="dec()">-1</button>
       <div class="flex">
         <input
@@ -55,12 +55,13 @@ const getRelativeChordSpacing = (targetScale: string) => {
           @change="(e) => set(getRelativeChordSpacing((e.currentTarget as HTMLInputElement).value))"
         />
       </div>
-      <button class="btn" @click="reset()">0</button>
       <button class="btn" @click="inc()">+1</button>
+      <button class="btn ml-3" @click="reset()">0</button>
     </div>
     <div class="grid gap-4 lg:grid-cols-2">
       <textarea
         class="border rounded resize-none font-mono"
+        wrap="off"
         ref="textarea"
         v-model="lyrics"
       />
