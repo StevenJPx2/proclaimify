@@ -72,7 +72,7 @@ const getRelativeChordSpacing = (targetScale: string) => {
     </div>
     <div class="grid gap-4 lg:grid-cols-2">
       <textarea class="border rounded resize-none font-mono" wrap="off" ref="textarea" v-model="lyrics" />
-      <p class="whitespace-pre">{{ changedLyrics }}</p>
+      <p class="whitespace-pre font-mono">{{ changedLyrics }}</p>
       <dev-only>
         {{ scale }}
         <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>

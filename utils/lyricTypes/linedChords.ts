@@ -1,7 +1,5 @@
 import { ChordLyricFormat, EncodedLyrics } from "./types";
-// TODO: algo for decoding encoded lyrics to:
-// Bb         A
-// ...................
+
 export default <ChordLyricFormat>{
   encodeLyrics(lyrics) {
     const encodedLyrics: EncodedLyrics = [];
@@ -55,7 +53,7 @@ export default <ChordLyricFormat>{
                 )
             ),
           ] as [string, string],
-          chord,
+          chord: chord.trim(),
         };
 
         cursorPos += chord.length;
@@ -69,6 +67,27 @@ export default <ChordLyricFormat>{
     return encodedLyrics;
   },
   decodeLyrics(encoded) {
-    return "";
+    return encoded
+      .map((line) => {
+        let chordLine = "";
+        const lyricLine = line.map(({ lyrics }) => lyrics.join("")).join("");
+        line
+          .filter(
+            (value): value is { lyrics: [string, string]; chord: string } =>
+              !!value.chord
+          )
+          .forEach(({ lyrics, chord }) => {
+            if (lyrics.join("").trim() === "") {
+              chordLine += chord + "  ";
+              return;
+            }
+            chordLine +=
+              " ".repeat(lyrics[0].length) +
+              chord +
+              " ".repeat(Math.max(lyrics[1].length - chord.length, 0));
+          });
+        return `${chordLine}\n${lyricLine}`;
+      })
+      .join("\n");
   },
 };
