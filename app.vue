@@ -5,7 +5,6 @@ type ChordType = { name: string; format: ChordLyricFormat };
 
 const scale = ref<string>();
 const lyrics = ref(sampleLyrics);
-const { textarea } = useTextareaAutosize({ input: lyrics });
 const { count, inc, dec, set, reset } = useCounter();
 const chordTypes: [ChordType, ChordType] = [
   { name: "Lined", format: linedChords },
@@ -36,57 +35,112 @@ const getRelativeChordSpacing = (targetScale: string) => {
 </script>
 
 <template>
-  <main class="max-w-screen-lg w-full mx-auto px-3">
-    <section class="flex gap-5 items-center">
-      <label for="scale" class="mb-3 block">
-        Scale:
-        <input class="border px-4 py-2 rounded" type="text" id="scale" v-model="scale" />
-      </label>
-      <label for="from-chord-format" class="mb-3 block">
-        From Chord Format:
-        <select v-model="fromChordFormat">
-          <option v-for="chordType in chordTypes" :key="chordType.name" :value="chordType.format">
-            {{ chordType.name }}
-          </option>
-        </select>
-      </label>
-      <label for="to-chord-format" class="mb-3 block">
-        To Chord Format:
-        <select v-model="toChordFormat">
-          <option v-for="chordType in chordTypes" :key="chordType.name" :value="chordType.format">
-            {{ chordType.name }}
-          </option>
-        </select>
-      </label>
+  <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
+    <section class="flex flex-col lg:flex-row gap-5 items-center mb-6">
+      <div class="
+            rounded-lg
+            border-4 border-primary
+            py-4
+            w-full
+            max-w-sm
+            grid
+            place-items-center
+          ">
+        <img src="~/assets/pcfy-logo.svg" class="min-w-[100px]" />
+      </div>
+      <div class="grid gap-3">
+        <label for="scale" class="block">
+          scale
+          <input class="border px-4 py-1 rounded" type="text" id="scale" v-model="scale" />
+        </label>
+        <label for="from-chord-format" class="block">
+          from chord format
+          <select v-model="fromChordFormat">
+            <option v-for="chordType in chordTypes" :key="chordType.name" :value="chordType.format">
+              {{ chordType.name }}
+            </option>
+          </select>
+        </label>
+        <label for="to-chord-format" class="block">
+          to chord format
+          <select v-model="toChordFormat">
+            <option v-for="chordType in chordTypes" :key="chordType.name" :value="chordType.format">
+              {{ chordType.name }}
+            </option>
+          </select>
+        </label>
+      </div>
     </section>
-    <div class="flex items-center gap-2 mb-4">
-      <button class="btn" @click="dec()">-1</button>
+
+    <div class="flex items-center mb-4">
+      <button class="btn !rounded-r-none !border-r-0" @click="dec()">-</button>
       <div class="flex">
-        <input class="border rounded-l w-8" type="number" :value="count"
+        <input class="!border-y-none !rounded-none w-10" type="number" :value="count"
           @change="(e) => set((e.currentTarget as HTMLInputElement).valueAsNumber)" />
-        <input v-if="!!scale" class="border border-l-0 rounded-r w-8" type="type" :value="transposeChord(scale, count)"
+        <input v-if="!!scale" class="!border-l-0 !rounded-none w-10" type="type" :value="transposeChord(scale, count)"
           @input="(e) => set(getRelativeChordSpacing((e.currentTarget as HTMLInputElement).value))" />
       </div>
-      <button class="btn" @click="inc()">+1</button>
+      <button class="btn !rounded-l-none !border-l-0" @click="inc()">+</button>
       <button class="btn ml-3" @click="reset()">0</button>
     </div>
-    <div class="grid gap-4 lg:grid-cols-2">
-      <textarea class="border rounded resize-none font-mono" wrap="off" ref="textarea" v-model="lyrics" />
-      <p class="whitespace-pre font-mono">{{ changedLyrics }}</p>
-      <dev-only>
-        {{ scale }}
-        <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>
-      </dev-only>
+
+    <div class="grid gap-4 lg:grid-cols-2 font-normal">
+      <textarea class="
+            border-4 border-primary
+            rounded-lg
+            resize-none
+            h-96
+            font-mono
+            p-2
+          " v-model="lyrics" wrap="off" />
+      <p class="
+            whitespace-pre
+            font-mono
+            overflow-scroll
+            border-4 border-primary
+            rounded-lg
+            select-all
+            h-96
+            p-2
+          ">
+        {{ changedLyrics }}
+      </p>
     </div>
+    <dev-only>
+      {{ scale }}
+      <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>
+    </dev-only>
   </main>
 </template>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+  @apply text-lg;
+  @apply font-semibold;
+}
+
+label,
+input,
+select {
+  @apply text-primary;
+}
+
+input:not([type="submit"]),
+select {
+  @apply rounded-lg;
+  @apply border-4;
+  @apply border-primary;
+}
+
 .btn {
-  @apply p-3;
-  @apply rounded;
-  @apply border;
-  @apply bg-gray-50;
+  @apply px-3;
+  @apply rounded-lg;
+  @apply border-4;
+  @apply border-primary;
+  @apply text-primary;
   @apply cursor-pointer;
 
   &.active {
