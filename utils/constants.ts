@@ -1,119 +1,119 @@
 export const sampleLyrics = `
 Intro
-
-Fm Bbm F Fm Gb F Fm Gb F Fm Fm9
-
-Ab Eb Ebm9 Ab Eb Ebm9 F    Eb/G Ab Bbm Ab/C
-
-
-
-Chorus
-
-Fm9     Db Eb              Fm9     Db Eb
-
- I will praise Your name, and I will bless  You always
-
-F/A     Bbm9               F Eb/G Ab Bbm7 Caug7
-
- I will praise Your name today
-
-Fm9     Db Eb
-
- I will  sing  and shout it
-
-Fm9     Fm7 Bb   Db Eb   C7 #9    Bbm7
-
- I will tell the world     about      it
-
-F/A     Bbm9               F
-
- I will praise Your name today
-
- Eb/G Ab Bbm7 Caug
-
- Bb2 D Db/F7sus C Fm7 b5  B
-
+C   F/A   C/G   F/A
 
 
 Verse 1
+             C              C/E   F
+What gift of grace is Jesus my redeemer
+            C               Am     G
+There is no more for heaven now to give
+         C                C/E       F
+He is my joy, my righteousness, and freedom
+             C        G                  C/F   C
+My steadfast love, my deep and boundless peace
 
-Bbm9  Ab2 C Db         Bbm9   Ab2 C Db
 
-    I made   my decision,    no turn - ing back for me, oh
+Chorus 1
+          F                     C
+To this I hold, my hope is only Jesus
+C/E    F       C               G
+For my life is wholly bound to His
+       C           Dm            C/E          F
+Oh how strange and divine, I can sing  all is mine 
+        C/G            G         C
+Yet not I, but through Christ in me
 
-Bbm9    Ab2 C Db
 
-    All glo  - ry  I'm givin'
-
- Bbm9       Ab2 C Db     Cm7  Fm7 b5  B
-
-               You're Lord   of ev'rything
-
- Bbm9       Ab     Db     Ab2 C
-
-               You're Lord   of  ev'rything
-
+Interlude
+C   F/A   C/G   F/A
 
 
 Verse 2
-
-Bbm9     Ab2 C Db          Bbm9     Ab2 C Db
-
-    Your mer - cy's unending,    Your grace  has guarded me, oh
-
-Bbm9   Ab2 C Db
-
-    My Mas  - ter my Savior
-
- Bbm9       Ab2 C Db     Cm7  Fm7 b5  B
-
-               You're Lord   of ev'rything
-
- Bbm9       Ab   Db     Ab2 C
-
-               You're Lord of  ev'rything
+             C             C/E   F
+The night is dark but I am not forsaken
+           C                Am      G
+For by my side, the Saviour He will stay
+         C              C/E    F
+I labour on in weakness and rejoicing
+          C         G           C/F   C
+For in my need, His power is displayed
 
 
-
-Bridge
-
-Eb/G Ab       Bbm7         Caug
-
-     Somebody give Him the praise, give Him the praise
-
-Give Him the praise, give Him the praise
-
-Bbm7   Cm7
-
-Give Him the praise
-
-Bbm7
-
-    Oh yeah, oh yeah, oh yeah
-
-                           Eb/G Ab Bbm Caug
-
-Oh yeah, oh yeah, oh, yeah
+Chorus 2
+   C/E    F                        C
+To this I hold, my Shepherd will defend me
+C/E         F       C               G
+Through the deepest valley He will lead
+       C              Dm         C/E       F
+Oh the night has been won, and I shall overcome 
+        C/G            G         C
+Yet not I, but through Christ in me
 
 
+Interlude
 
-Ending
 
-Fm Bbm F Fm Gb F    Bbm F  Fm Fm7
+Verse 3
+           C              C/E   F
+No fate I dread, I know I am forgiven
+           C                  Am       G
+The future sure, the price it has been paid
+          C                 C/E    F
+For Jesus bled and suffered for my pardon
+           C         G             C/F   C
+And He was raised to overthrow the grave
 
-I  live  to praise, I praise to live
 
-Fm Bbm F Fm Gb F
+Chorus 3
+   C/E    F                       C
+To this I hold, my sin has been defeated
+C/E   F       C          G
+Jesus now and ever is my plea
+       C            Dm            C/E        F
+Oh the chains are released, I can sing, I am free 
+        C/G            G         C/F   C
+Yet not I, but through Christ in me
 
-I  live  to praise
 
-       F          Eb/G Ab   Bbm    Caug
+Interlude
 
-And forever and ever I    will praise You
 
- Fm
+Verse 4 (bare, then build)
+           C                       F
+With every breath I long to follow Jesus
+           C                 Am       G
+For He has said that He will bring me home
+           C             C/E    F
+And day by day I know He will renew me
+        C          G              C/F   C
+Until I stand with joy before the throne
 
-           I will
+
+Chorus 4 (x2)
+   C/E    F                     C
+To this I hold, my hope is only Jesus
+C/E     F     C           G
+All the glory evermore to Him
+         C          Dm              C/E          F
+When the race is complete, still my lips shall repeat 
+        C/G            G         C/F   C
+Yet not I, but through Christ in me 
+
+
+Tag
+         C           Dm             C/E          F        
+When the race is complete, still my lips shall repeat 
+        C/G            G         Am    F
+Yet not I, but through Christ in me 
+        C/G            G         Am    F
+Yet not I, but through Christ in me 
+        C/G            G         C
+Yet not I, but through Christ in me
+
+
+Outro
+C   F/A   C/G   F/A
 `;
 
 export const chordSteps: (string | [string, string])[] = [
