@@ -23,7 +23,7 @@ export default <ChordLyricFormat>{
         const nextLine = lyrics[lineNumber + 1];
         if (
           regex.test(nextLine) ||
-          /^(intro|chorus|verse|v|bridge|tag|pre[-\s]?chorus)\s?\d*/i.test(
+          /^(intro|chorus|verse|v|bridge|tag|pre[-\s]?chorus|interlude)\s?\d*/i.test(
             nextLine
           )
         ) {
