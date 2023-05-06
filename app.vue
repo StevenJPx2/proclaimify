@@ -16,9 +16,7 @@ const toChordFormat = ref<ChordLyricFormat>(chordTypes[1].format);
 
 const encodedLyrics = computed<EncodedLyrics>(() =>
   fromChordFormat.value
-    .encodeLyrics(
-      (lyrics.value ?? "").split("\n").filter((line) => line.trim() !== "")
-    )
+    .encodeLyrics((lyrics.value ?? "").split("\n"))
     .map((line) =>
       line.map((val) => ({
         ...val,
