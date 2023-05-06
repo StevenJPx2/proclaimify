@@ -1,20 +1,21 @@
-import { ChordLyricFormat, EncodedLyric } from "./types";
+import { ChordLyricFormat, EncodedLyrics } from "./types";
 // TODO: algo for decoding encoded lyrics to:
 // Bb         A
 // ...................
 export default <ChordLyricFormat>{
   encodeLyrics(lyrics) {
-    const encodedLyrics: EncodedLyric[] = [];
+    const encodedLyrics: EncodedLyrics = [];
+    let lastLyricPos = () => encodedLyrics.length - 1;
 
     for (let lineNumber = 0; lineNumber < lyrics.length; lineNumber++) {
       const line = lyrics[lineNumber];
       const regex = new RegExp(chordRegex() + "\\s*", "g");
       const prospectiveChords = line.match(regex);
       if (!prospectiveChords) {
-        encodedLyrics.push({ lyrics: ["\n", line] });
+        encodedLyrics.push([{ lyrics: ["", line] }]);
         continue;
       } else {
-        encodedLyrics.push({ lyrics: ["", "\n"] });
+        encodedLyrics.push([]);
       }
 
       let prospectiveLyric = "";
@@ -26,7 +27,7 @@ export default <ChordLyricFormat>{
             nextLine
           )
         ) {
-          encodedLyrics.push({ lyrics: ["", ""], chord: line });
+          encodedLyrics[lastLyricPos()].push({ lyrics: ["", ""], chord: line });
           continue;
         }
         prospectiveLyric = nextLine;
@@ -52,7 +53,7 @@ export default <ChordLyricFormat>{
 
         cursorPos += chord.length;
 
-        encodedLyrics.push(encoded);
+        encodedLyrics[lastLyricPos()].push(encoded);
       });
 
       lineNumber++;

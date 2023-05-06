@@ -1,5 +1,9 @@
 import { insetChords, linedChords } from "./lyricTypes";
-import { EncodedLyric } from "./lyricTypes/types";
+import {
+  EncodedLyric,
+  EncodedLyrics,
+  ChordLyricFormat,
+} from "./lyricTypes/types";
 
 export const notePattern = "[A-G][b#]?";
 export function chordRegex() {
@@ -15,10 +19,9 @@ export function chordRegex() {
   const bass = `(?:\\/${notePattern})`;
 
   const lookahead = "(?=$| )";
-  const source = `${notePattern}${`(?:${altered}|${
-    `(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
+  const source = `${notePattern}${`(?:${altered}|${`(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
     `${mod}*${sus}?${mod}*${add}?`
-  })`}${bass}?${lookahead}`;
+    })`}${bass}?${lookahead}`;
 
   return source;
 }
@@ -74,4 +77,4 @@ export function transposeChord(chords: string, increment: number): string {
 }
 
 export { linedChords, insetChords };
-export type { EncodedLyric };
+export type { EncodedLyric, EncodedLyrics, ChordLyricFormat };
