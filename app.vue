@@ -39,7 +39,7 @@ const { copy, copied } = useClipboard();
 </script>
 
 <template>
-  <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
+  <div class="pointer-events-none w-full fixed mt-5">
     <transition
       appear
       mode="in-out"
@@ -53,17 +53,15 @@ const { copy, copied } = useClipboard();
       <div
         v-if="copied"
         class="
-          fixed
           flex
           items-center
           gap-2
-          mt-5
           rounded-lg
           shadow-black/20 shadow-lg
           z-[1000]
           px-5
           py-3
-          inset-x-1/2
+          mx-auto
           w-max
           bg-white
           text-green-700
@@ -73,7 +71,8 @@ const { copy, copied } = useClipboard();
         Copied!
       </div>
     </transition>
-
+  </div>
+  <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
     <section class="flex flex-col lg:flex-row gap-5 items-center mb-6">
       <div
         class="
@@ -156,13 +155,13 @@ const { copy, copied } = useClipboard();
         wrap="off"
       />
       <p
-        class="whitespace-pre overflow-scroll select-all h-96"
+        class="whitespace-pre overflow-scroll select-none h-96"
         @click="copy(changedLyrics)"
       >
         {{ changedLyrics }}
       </p>
       <p
-        class="whitespace-pre overflow-scroll select-all h-96"
+        class="whitespace-pre overflow-scroll select-none h-96"
         @click="copy(lowerThirdLyrics)"
       >
         {{ lowerThirdLyrics }}
