@@ -28,14 +28,52 @@ const changedLyrics = computed(() =>
   toChordFormat.value.decodeLyrics(encodedLyrics.value)
 );
 
+const lowerThirdLyrics = computed(() => makeLowerThirds(encodedLyrics.value));
+
 const getRelativeChordSpacing = (targetScale: string) => {
   if (!scale.value) return count.value;
   return findChordStepIndex(targetScale) - findChordStepIndex(scale.value);
 };
+
+const { copy, copied } = useClipboard();
 </script>
 
 <template>
   <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
+    <transition
+      appear
+      mode="in-out"
+      enter-from-class="opacity-0 scale-[.4] -translate-y-6"
+      enter-active-class="transition ease-out-expo duration-500"
+      enter-to-class="opacity-1 scale-100 translate-y-0"
+      leave-from-class="opacity-1 scale-100 translate-y-0"
+      leave-active-class="transition ease-in-sine duration-200"
+      leave-to-class="opacity-0 scale-[.4] -translate-y-8"
+    >
+      <div
+        v-if="copied"
+        class="
+          fixed
+          flex
+          items-center
+          gap-2
+          mt-5
+          rounded-lg
+          shadow-black/20 shadow-lg
+          z-[1000]
+          px-5
+          py-3
+          inset-x-1/2
+          w-max
+          bg-white
+          text-green-700
+        "
+      >
+        <icon name="heroicons:check-badge-20-solid" />
+        Copied!
+      </div>
+    </transition>
+
     <section class="flex flex-col lg:flex-row gap-5 items-center mb-6">
       <div
         class="
@@ -117,11 +155,17 @@ const getRelativeChordSpacing = (targetScale: string) => {
         v-model="lyrics"
         wrap="off"
       />
-      <p class="whitespace-pre overflow-scroll select-all h-96">
+      <p
+        class="whitespace-pre overflow-scroll select-all h-96"
+        @click="copy(changedLyrics)"
+      >
         {{ changedLyrics }}
       </p>
-      <p class="whitespace-pre overflow-scroll select-all h-96">
-        {{ makeLowerThirds(encodedLyrics) }}
+      <p
+        class="whitespace-pre overflow-scroll select-all h-96"
+        @click="copy(lowerThirdLyrics)"
+      >
+        {{ lowerThirdLyrics }}
       </p>
     </section>
 

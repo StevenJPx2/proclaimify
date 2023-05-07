@@ -95,7 +95,6 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
     secondLine[0] = secondLine[0].toLowerCase();
     newLyrics += `${line}, ${secondLine.join(" ")}\n`;
     lineNumber++;
-    console.log(lineNumber, newLyrics);
   }
 
   return newLyrics;
