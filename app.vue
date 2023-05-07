@@ -123,14 +123,14 @@ const { copy, copied } = useClipboard();
       <button class="btn !rounded-r-none !border-r-0" @click="dec()">-</button>
       <div class="flex">
         <input
-          class="!border-y-none !rounded-none !p-0 w-10"
+          class="!border-y-none !rounded-none !p-0 !pl-1 w-10"
           type="number"
           :value="count"
           @change="(e) => set((e.currentTarget as HTMLInputElement).valueAsNumber)"
         />
         <input
           v-if="!!scale"
-          class="!border-l-0 !rounded-none !p-0 w-10"
+          class="!border-l-0 !rounded-none !p-0 !pl-1 w-10"
           type="type"
           :value="transposeChord(scale, count)"
           @input="(e) => set(getRelativeChordSpacing((e.currentTarget as HTMLInputElement).value))"
