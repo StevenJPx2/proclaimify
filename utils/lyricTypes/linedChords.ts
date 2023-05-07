@@ -1,3 +1,4 @@
+import { songSectionRegex } from "..";
 import { ChordLyricFormat, EncodedLyrics } from "./types";
 
 export default <ChordLyricFormat>{
@@ -19,12 +20,7 @@ export default <ChordLyricFormat>{
       let prospectiveLyric = "";
       if (lineNumber < lyrics.length - 1) {
         const nextLine = lyrics[lineNumber + 1];
-        if (
-          regex.test(nextLine) ||
-          /^(intro|chorus|verse|v|bridge|tag|pre[-\s]?chorus|interlude)\s?\d*/i.test(
-            nextLine
-          )
-        ) {
+        if (regex.test(nextLine) || songSectionRegex.test(nextLine)) {
           encodedLyrics[lastLyricPos()].push({ lyrics: ["", ""], chord: line });
           continue;
         }
@@ -86,6 +82,9 @@ export default <ChordLyricFormat>{
               chord +
               " ".repeat(Math.max(lyrics[1].length - chord.length, 0));
           });
+
+        if (chordLine.trim() === "") return lyricLine;
+
         return `${chordLine}\n${lyricLine}`;
       })
       .join("\n");

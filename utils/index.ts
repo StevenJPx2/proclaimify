@@ -5,6 +5,8 @@ import {
   ChordLyricFormat,
 } from "./lyricTypes/types";
 
+export const songSectionRegex =
+  /^(intro|chorus|verse|v|bridge|tag|pre[-\s]?chorus|interlude)\s?\d*/i;
 export const notePattern = "[A-G][b#]?";
 export function chordRegex() {
   const altered = `(?:5|dim(5|7)?|aug5?|\\+5?|-5?)`;
@@ -74,6 +76,29 @@ export function transposeChord(chords: string, increment: number): string {
         .join("/");
     })
     .join("");
+}
+
+export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
+  let newLyrics = "";
+  const lyricArray = encodedLyrics.map((line) =>
+    line.map(({ lyrics }) => lyrics.join("")).join("")
+  );
+
+  for (let lineNumber = 0; lineNumber < lyricArray.length; lineNumber++) {
+    const line = lyricArray[lineNumber];
+    if (songSectionRegex.test(line) || line.trim() === "") {
+      newLyrics += line + "\n";
+      continue;
+    }
+    const secondLine =
+      lyricArray[Math.min(lineNumber + 1, lyricArray.length - 1)].split(" ");
+    secondLine[0] = secondLine[0].toLowerCase();
+    newLyrics += `${line}, ${secondLine.join(" ")}\n`;
+    lineNumber++;
+    console.log(lineNumber, newLyrics);
+  }
+
+  return newLyrics;
 }
 
 export { linedChords, insetChords };
