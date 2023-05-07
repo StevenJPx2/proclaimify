@@ -92,7 +92,11 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
     }
     const secondLine =
       lyricArray[Math.min(lineNumber + 1, lyricArray.length - 1)].split(" ");
-    secondLine[0] = secondLine[0].toLowerCase();
+    secondLine[0] = !/(Jesus|God|Yahweh|I|Him|You|He|Christ)/.test(
+      secondLine[0]
+    )
+      ? secondLine[0].toLowerCase()
+      : secondLine[0];
     newLyrics += `${line}, ${secondLine.join(" ")}\n`;
     lineNumber++;
   }
