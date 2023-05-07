@@ -85,7 +85,9 @@ const { copy, copied } = useClipboard();
           place-items-center
         "
       >
-        <img src="~/assets/pcfy-logo.svg" class="min-w-[100px]" />
+        <svgo-pcfy-logo
+          class="min-h-[100px] min-w-[100px] text-primary aspect-square"
+        />
       </div>
       <div class="grid gap-3">
         <label for="scale" class="block">
@@ -150,21 +152,17 @@ const { copy, copied } = useClipboard();
       "
     >
       <textarea
-        class="resize-none lg:row-span-full min-h-[24rem]"
+        class="resize-none lg:row-span-full min-h-[24rem] bg-background"
         v-model="lyrics"
         wrap="off"
       />
       <p
-        class="whitespace-pre overflow-scroll select-none h-96"
-        @click="copy(changedLyrics)"
+        v-for="(generatedLyrics, index) in [changedLyrics, lowerThirdLyrics]"
+        :key="index"
+        class="whitespace-pre overflow-scroll h-96"
+        @click="copy(generatedLyrics)"
       >
-        {{ changedLyrics }}
-      </p>
-      <p
-        class="whitespace-pre overflow-scroll select-none h-96"
-        @click="copy(lowerThirdLyrics)"
-      >
-        {{ lowerThirdLyrics }}
+        {{ generatedLyrics }}
       </p>
     </section>
 
@@ -178,16 +176,31 @@ const { copy, copied } = useClipboard();
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
+:root {
+  --color-primary: #fb8661;
+  --color-background: #fff;
+  --color-normal: #000;
+
+  @media (prefers-color-scheme: dark) {
+    --color-primary: #fff;
+    --color-background: #fb8661;
+    --color-normal: #fff;
+  }
+}
+
 body {
   font-family: "Inter", sans-serif;
   @apply text-lg;
+  @apply text-normal;
   @apply font-semibold;
+  @apply bg-background;
 }
 
 label,
 input,
 select {
   @apply text-primary;
+  @apply bg-background;
 }
 
 input:not([type="submit"]),

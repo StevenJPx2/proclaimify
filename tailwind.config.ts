@@ -3,7 +3,11 @@ import type { Config } from "tailwindcss";
 export default <Partial<Config>>{
   theme: {
     extend: {
-      colors: { primary: "#FB8661" },
+      colors: {
+        primary: "var(--color-primary)",
+        background: "var(--color-background)",
+        normal: "var(--color-normal)",
+      },
       transitionTimingFunction: {
         css: "ease",
         "css-in": "ease-in",

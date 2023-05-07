@@ -43,5 +43,6 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "nuxt-icon",
     "@nuxtjs/fontaine",
+    "nuxt-svgo",
   ],
 });
