@@ -9,7 +9,7 @@ export const songSectionRegex =
   /^(intro|chorus|verse|v|bridge|tag|pre[-\s]?chorus|interlude)\s?\d*/i;
 export const notePattern = "[A-G][b#]?";
 export function chordRegex() {
-  const altered = `(?:5|dim(5|7)?|aug5?|\\+5?|-5?)`;
+  const altered = `(?:2|5|dim(5|7)?|aug5?|\\+5?|-5?)`;
   const minor = "(?:mi?n?)";
   const major = "(?:maj?|Ma?j?)";
   const majorableExt = `(?:6|7|9|11|13)`;
