@@ -6,7 +6,7 @@ import {
 } from "./lyricTypes/types";
 
 export const songSectionRegex =
-  /^(intro|chorus|verse|v|bridge|tag|pre[-\s]?chorus|interlude)\s?\d*/i;
+  /^(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude)\s?\d*/i;
 export const notePattern = "[A-G][b#]?";
 export function chordRegex() {
   const altered = `(?:2|5|dim(5|7)?|aug5?|\\+5?|-5?)`;
