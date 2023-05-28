@@ -4,7 +4,7 @@ import { EncodedLyrics, ChordLyricFormat } from "./utils";
 type ChordType = { name: string; format: ChordLyricFormat };
 
 const scale = ref<string>();
-const lyrics = ref(sampleLyrics);
+const lyrics = ref();
 const { count, inc, dec, set, reset } = useCounter();
 const chordTypes: [ChordType, ChordType] = [
   { name: "Lined", format: linedChords },
