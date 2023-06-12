@@ -1,0 +1,32 @@
+<script lang="ts" setup>
+defineProps({ desc: { type: String }, text: { type: String, required: true } });
+const { copy, copied } = useClipboard();
+const bus = useEventBus<boolean>("copied");
+
+watch(copied, (val) => {
+  bus.emit(val);
+});
+</script>
+
+<template>
+  <div>
+    <div class="flex justify-between mb-2">
+      <h3 class="font-inter">{{ desc }}</h3>
+      <button @click="copy(text)">
+        <icon name="heroicons:clipboard-document-20-solid" size="25" />
+      </button>
+    </div>
+    <p
+      class="
+        whitespace-pre
+        overflow-scroll
+        h-96
+        border-4 border-primary
+        rounded-lg
+        p-2
+      "
+    >
+      {{ text }}
+    </p>
+  </div>
+</template>

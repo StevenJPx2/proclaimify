@@ -1,9 +1,6 @@
-import { insetChords, linedChords } from "./lyricTypes";
-import {
-  EncodedLyric,
-  EncodedLyrics,
-  ChordLyricFormat,
-} from "./lyricTypes/types";
+export * from "./lyricTypes";
+export * from "./lyricTypes/types";
+import { EncodedLyrics } from "./lyricTypes/types";
 
 export const songSectionRegex =
   /^(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude|outro)\s?\d*/i;
@@ -21,9 +18,10 @@ export function chordRegex() {
   const bass = `(?:\\/${notePattern})`;
 
   const lookahead = "(?=$| )";
-  const source = `${notePattern}${`(?:${altered}|${`(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
+  const source = `${notePattern}${`(?:${altered}|${
+    `(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
     `${mod}*${sus}?${mod}*${add}?`
-    })`}${bass}?${lookahead}`;
+  })`}${bass}?${lookahead}`;
 
   return source;
 }
@@ -97,12 +95,9 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
     )
       ? secondLine[0].toLowerCase()
       : secondLine[0];
-    newLyrics += `${line}, ${secondLine.join(" ")}\n`;
+    newLyrics += `${line.trimEnd()}, ${secondLine.join(" ")}\n`;
     lineNumber++;
   }
 
   return newLyrics;
 }
-
-export { linedChords, insetChords };
-export type { EncodedLyric, EncodedLyrics, ChordLyricFormat };
