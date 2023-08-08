@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "Proclaimify",
+      htmlAttrs: { lang: "en" },
       link: [
         {
           rel: "apple-touch-icon",

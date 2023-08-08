@@ -12,7 +12,10 @@ watch(copied, (val) => {
   <div>
     <div class="flex justify-between mb-2 text-primary">
       <h3 class="font-inter">{{ desc }}</h3>
-      <button @click="copy(text)">
+      <button
+        @click="copy(text)"
+        :name="desc?.toLowerCase().split(' ').join('-')"
+      >
         <icon
           :name="
             copied
