@@ -10,7 +10,7 @@ watch(copied, (val) => {
 
 <template>
   <div>
-    <div class="flex justify-between mb-2">
+    <div class="flex justify-between mb-2 text-primary">
       <h3 class="font-inter">{{ desc }}</h3>
       <button @click="copy(text)">
         <icon
