@@ -124,7 +124,9 @@ bus.on((val) => (copied.value = val));
           border-4 border-primary
           rounded-lg
           p-2
+          placeholder:text-normal placeholder:opacity-50
         "
+        placeholder="Enter lyrics here..."
         v-model="lyrics"
         wrap="off"
       />
