@@ -13,7 +13,14 @@ watch(copied, (val) => {
     <div class="flex justify-between mb-2">
       <h3 class="font-inter">{{ desc }}</h3>
       <button @click="copy(text)">
-        <icon name="heroicons:clipboard-document-20-solid" size="25" />
+        <icon
+          :name="
+            copied
+              ? 'heroicons:clipboard-document-check-20-solid'
+              : 'heroicons:clipboard-document-20-solid'
+          "
+          size="25"
+        />
       </button>
     </div>
     <p
