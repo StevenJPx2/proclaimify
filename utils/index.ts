@@ -84,7 +84,7 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
 
   for (let lineNumber = 0; lineNumber < lyricArray.length; lineNumber++) {
     const line = lyricArray[lineNumber];
-    if (songSectionRegex.test(line) || line.trim() === "") {
+    if (songSectionRegex.test(line.trimStart()) || line.trim() === "") {
       newLyrics += line + "\n";
       continue;
     }
