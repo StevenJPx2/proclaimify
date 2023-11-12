@@ -1,4 +1,9 @@
-# Nuxt 3 Minimal Starter
+# Proclaimify
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/050cdf94-4257-4482-ab6a-037ae5e41ade/deploy-status)](https://app.netlify.com/sites/subtle-sunburst-a96579/deploys)
+
+
+## Development
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
