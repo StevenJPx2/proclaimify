@@ -18,5 +18,8 @@
     "sass": "^1.69.5",
     "typescript": "^5.2.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "openai": "^4.17.4",
+    "zod": "^3.22.4"
+  }
 }

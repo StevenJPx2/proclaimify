@@ -2,8 +2,32 @@
 import { type EncodedLyrics, type ChordLyricFormat } from "./utils";
 
 const scale = ref<string>();
+const isGuessingScale = ref(false);
+
+const guessScale = useDebounceFn(
+  async () =>
+    (scale.value = await $fetch<string>("/api/guess-scale", {
+      method: "post",
+      onRequest() {
+        isGuessingScale.value = true;
+      },
+      onResponse() {
+        isGuessingScale.value = false;
+      },
+      body: {
+        chords: encodedLyrics.value
+          .flat()
+          .flatMap((lyric) => (!!lyric.chord ? [lyric.chord.trim()] : []))
+          .join(" "),
+      },
+    })),
+
+  1000,
+);
+
 const lyrics = ref("");
 const { count, inc, dec, set, reset } = useCounter();
+
 const hasManuallyChangedChordFormat = ref(false);
 const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
 const toChordFormat = ref<ChordLyricFormat>(chordTypesTuple[1].format);
@@ -32,11 +56,17 @@ const copied = ref(false);
 const bus = useEventBus<boolean>("copied");
 bus.on((val) => (copied.value = val));
 
-watch(lyrics, (val) => {
-  if (hasManuallyChangedChordFormat.value) return;
-  fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
-  set(0);
-});
+watchDebounced(
+  lyrics,
+  (val, oldVal) => {
+    if (hasManuallyChangedChordFormat.value) return;
+    fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
+    set(0);
+
+    if (oldVal.trim() === "" && val.trim() !== "") guessScale();
+  },
+  { debounce: 50 },
+);
 </script>
 
 <template>
@@ -54,6 +84,13 @@ watch(lyrics, (val) => {
         <label for="scale" class="block">
           original scale
           <input class="w-20" type="text" id="scale" v-model="scale" />
+          <button @click="guessScale" class="ml-2">
+            <icon
+              name="heroicons:sparkles-solid"
+              :class="{ 'animate-pulse': isGuessingScale }"
+              class="w-6 h-6"
+            />
+          </button>
         </label>
         <label for="from-chord-format" class="block">
           from chord format

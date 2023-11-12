@@ -15,7 +15,7 @@ export function detectChordFormat(song: string): ChordFormat {
     const textInsideBrackets = match[0].slice(1, -1);
 
     // Split the text inside brackets into potential chords and lyrics parts
-    const parts = textInsideBrackets.split(/(?=[A-Z])/);
+    const parts = textInsideBrackets.split(/\s+?/);
 
     // Check each part with the chordRegex
     for (const part of parts) {
