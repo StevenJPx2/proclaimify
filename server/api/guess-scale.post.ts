@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     messages: [
       {
         role: "system",
-        content: `You are a function that will determine the root chord from a set of chords. The ONLY format you HAVE to output is in this JSON format: {"c": "<root_chord>"}.`,
+        content: `You are a function that determines the root chord from a set of chords. The format you HAVE to output is in JSON: {"c": "<root_chord>"}.`,
       },
       { role: "user", content: chords },
     ],
