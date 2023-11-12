@@ -1,31 +1,24 @@
 <script lang="ts" setup>
-import { EncodedLyrics, ChordLyricFormat } from "./utils";
-
-type ChordType = { name: string; format: ChordLyricFormat };
+import { type EncodedLyrics, type ChordLyricFormat } from "./utils";
 
 const scale = ref<string>();
-const lyrics = ref();
+const lyrics = ref("");
 const { count, inc, dec, set, reset } = useCounter();
-const chordTypes: [ChordType, ChordType] = [
-  { name: "Lined", format: linedChords },
-  { name: "Inset", format: insetChords },
-];
-const fromChordFormat = ref<ChordLyricFormat>(chordTypes[0].format);
-const toChordFormat = ref<ChordLyricFormat>(chordTypes[1].format);
+const hasManuallyChangedChordFormat = ref(false);
+const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
+const toChordFormat = ref<ChordLyricFormat>(chordTypesTuple[1].format);
 
 const encodedLyrics = computed<EncodedLyrics>(() =>
-  fromChordFormat.value
-    .encodeLyrics((lyrics.value ?? "").split("\n"))
-    .map((line) =>
-      line.map((val) => ({
-        ...val,
-        chord: !val.chord ? undefined : transposeChord(val.chord, count.value),
-      }))
-    )
+  fromChordFormat.value.encodeLyrics(lyrics.value.split("\n")).map((line) =>
+    line.map((val) => ({
+      ...val,
+      chord: !val.chord ? undefined : transposeChord(val.chord, count.value),
+    })),
+  ),
 );
 
 const changedLyrics = computed(() =>
-  toChordFormat.value.decodeLyrics(encodedLyrics.value)
+  toChordFormat.value.decodeLyrics(encodedLyrics.value),
 );
 
 const lowerThirdLyrics = computed(() => makeLowerThirds(encodedLyrics.value));
@@ -38,6 +31,12 @@ const getRelativeChordSpacing = (targetScale: string) => {
 const copied = ref(false);
 const bus = useEventBus<boolean>("copied");
 bus.on((val) => (copied.value = val));
+
+watch(lyrics, (val) => {
+  if (hasManuallyChangedChordFormat.value) return;
+  fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
+  set(0);
+});
 </script>
 
 <template>
@@ -45,15 +44,7 @@ bus.on((val) => (copied.value = val));
   <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
     <section class="flex flex-col lg:flex-row gap-5 items-center mb-6">
       <div
-        class="
-          rounded-lg
-          border-4 border-primary
-          py-4
-          w-full
-          max-w-sm
-          grid
-          place-items-center
-        "
+        class="rounded-lg border-4 border-primary py-4 w-full max-w-sm grid place-items-center"
       >
         <svgo-pcfy-logo
           class="min-h-[100px] min-w-[100px] text-primary aspect-square"
@@ -66,9 +57,12 @@ bus.on((val) => (copied.value = val));
         </label>
         <label for="from-chord-format" class="block">
           from chord format
-          <select v-model="fromChordFormat">
+          <select
+            v-model="fromChordFormat"
+            @blur="hasManuallyChangedChordFormat = true"
+          >
             <option
-              v-for="chordType in chordTypes"
+              v-for="chordType in chordTypesTuple"
               :key="chordType.name"
               :value="chordType.format"
             >
@@ -80,7 +74,7 @@ bus.on((val) => (copied.value = val));
           to chord format
           <select v-model="toChordFormat">
             <option
-              v-for="chordType in chordTypes"
+              v-for="chordType in chordTypesTuple"
               :key="chordType.name"
               :value="chordType.format"
             >
@@ -98,14 +92,23 @@ bus.on((val) => (copied.value = val));
           class="!border-y-none !rounded-none !p-0 !pl-1 w-10"
           type="number"
           :value="count"
-          @change="(e) => set((e.currentTarget as HTMLInputElement).valueAsNumber)"
+          @change="
+            (e) => set((e.currentTarget as HTMLInputElement).valueAsNumber)
+          "
         />
         <input
           v-if="!!scale"
           class="!border-l-0 !rounded-none !p-0 !pl-1 w-10"
           type="type"
-          :value="transposeChord(scale, count)"
-          @input="(e) => set(getRelativeChordSpacing((e.currentTarget as HTMLInputElement).value))"
+          :value="transposeChord(scale, count.value)"
+          @input="
+            (e) =>
+              set(
+                getRelativeChordSpacing(
+                  (e.currentTarget as HTMLInputElement).value,
+                ),
+              )
+          "
         />
       </div>
       <button class="btn !rounded-l-none !border-l-0" @click="inc()">+</button>
@@ -113,19 +116,10 @@ bus.on((val) => (copied.value = val));
     </section>
 
     <section
-      class="grid gap-4 lg:grid-rows-2 lg:grid-cols-2 font-normal font-mono"
+      class="flex flex-col lg:grid gap-4 lg:grid-rows-2 lg:grid-cols-2 font-normal font-mono"
     >
       <textarea
-        class="
-          resize-none
-          lg:row-span-full
-          min-h-[24rem]
-          bg-background
-          border-4 border-primary
-          rounded-lg
-          p-2
-          placeholder:text-normal placeholder:opacity-50
-        "
+        class="resize-none lg:row-span-full min-h-[24rem] bg-background border-4 border-primary rounded-lg p-2 placeholder:text-normal placeholder:opacity-50"
         placeholder="Enter lyrics here..."
         v-model="lyrics"
         wrap="off"

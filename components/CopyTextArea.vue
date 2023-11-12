@@ -3,8 +3,8 @@ defineProps({ desc: { type: String }, text: { type: String, required: true } });
 const { copy, copied } = useClipboard();
 const bus = useEventBus<boolean>("copied");
 
-watch(copied, (val) => {
-  bus.emit(val);
+watchEffect(() => {
+  bus.emit(copied.value);
 });
 </script>
 
@@ -27,14 +27,7 @@ watch(copied, (val) => {
       </button>
     </div>
     <p
-      class="
-        whitespace-pre
-        overflow-scroll
-        h-96
-        border-4 border-primary
-        rounded-lg
-        p-2
-      "
+      class="whitespace-pre overflow-scroll h-96 border-4 border-primary rounded-lg p-2"
     >
       {{ text }}
     </p>

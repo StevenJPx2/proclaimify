@@ -8,16 +8,15 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxtjs/fontaine": "^0.2.5",
-    "@nuxtjs/tailwindcss": "^6.6.7",
-    "@vueuse/core": "^10.1.0",
-    "@vueuse/nuxt": "^10.1.0",
-    "nuxt": "^3.5.3",
-    "nuxt-icon": "^0.4.0",
-    "nuxt-svgo": "^3.1.0",
-    "pinceau": "^0.18.9",
-    "sass": "^1.62.1",
-    "typescript": "^5.0.4"
+    "@nuxtjs/fontaine": "^0.4.1",
+    "@nuxtjs/tailwindcss": "^6.9.4",
+    "@vueuse/core": "^10.6.0",
+    "@vueuse/nuxt": "^10.6.0",
+    "nuxt": "^3.8.1",
+    "nuxt-icon": "^0.6.5",
+    "nuxt-svgo": "^3.6.0",
+    "sass": "^1.69.5",
+    "typescript": "^5.2.2"
   },
   "dependencies": {}
 }
