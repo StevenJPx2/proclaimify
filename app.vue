@@ -100,7 +100,7 @@ watch(lyrics, (val) => {
           v-if="!!scale"
           class="!border-l-0 !rounded-none !p-0 !pl-1 w-10"
           type="type"
-          :value="transposeChord(scale, count.value)"
+          :value="transposeChord(scale, count)"
           @input="
             (e) =>
               set(
