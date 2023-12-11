@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const output = await openai.chat.completions.create({
     n: 1,
     temperature: 0.2,
-    max_tokens: 6,
+    max_tokens: 10,
     model: "gpt-3.5-turbo",
     messages: [
       {
