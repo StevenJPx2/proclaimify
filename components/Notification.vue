@@ -1,17 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from "vue";
+const props = withDefaults(
+  defineProps<{
+    appear: boolean;
+    text: string;
+    icon?: string;
+    type: "none" | "info" | "success" | "error";
+  }>(),
+  { type: "none" },
+);
 
-const props = defineProps({
-  appear: { type: Boolean, required: true },
-  text: { type: String, required: true },
-  icon: { type: String },
-  type: {
-    type: String as PropType<"none" | "info" | "success" | "error">,
-    default: "none",
-  },
-});
-
-const icons: { [I in typeof props["type"]]: string } = {
+const icons: { [I in (typeof props)["type"]]: string } = {
   none: "",
   success: "heroicons:check-badge-20-solid",
   info: "heroicons:information-circle-20-solid",
@@ -32,19 +30,7 @@ const icons: { [I in typeof props["type"]]: string } = {
     >
       <div
         v-if="appear"
-        class="
-          flex
-          items-center
-          gap-2
-          rounded-lg
-          shadow-black/20 shadow-lg
-          z-[1000]
-          px-5
-          py-3
-          mx-auto
-          w-max
-          bg-white
-        "
+        class="flex items-center gap-2 rounded-lg shadow-black/20 shadow-lg z-[1000] px-5 py-3 mx-auto w-max bg-white"
         :class="{
           'text-green-700': type === 'success',
           'text-black': type === 'none',

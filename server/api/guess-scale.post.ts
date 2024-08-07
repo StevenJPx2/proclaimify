@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     n: 1,
     temperature: 0.2,
     max_tokens: 10,
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
@@ -22,8 +22,6 @@ export default defineEventHandler(async (event) => {
       { role: "user", content: chords },
     ],
   });
-
-  console.log(output.choices[0].message.content);
 
   return z
     .object({

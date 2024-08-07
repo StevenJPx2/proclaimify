@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { type EncodedLyrics, type ChordLyricFormat } from "./utils";
+import type { EncodedLyrics, ChordLyricFormat } from "./utils";
 
 const scale = ref<string>();
 const isGuessingScale = ref(false);
 
 const guessScale = useDebounceFn(
-  async () =>
-    (scale.value = await $fetch<string>("/api/guess-scale", {
+  async () => {
+    scale.value = await $fetch<string>("/api/guess-scale", {
       method: "post",
       onRequest() {
         isGuessingScale.value = true;
@@ -17,10 +17,11 @@ const guessScale = useDebounceFn(
       body: {
         chords: encodedLyrics.value
           .flat()
-          .flatMap((lyric) => (!!lyric.chord ? [lyric.chord.trim()] : []))
+          .flatMap((lyric) => (lyric.chord ? [lyric.chord.trim()] : []))
           .join(" "),
       },
-    })),
+    });
+  },
 
   1000,
 );
@@ -54,7 +55,9 @@ const getRelativeChordSpacing = (targetScale: string) => {
 
 const copied = ref(false);
 const bus = useEventBus<boolean>("copied");
-bus.on((val) => (copied.value = val));
+bus.on((val) => {
+  copied.value = val;
+});
 
 watchDebounced(
   lyrics,

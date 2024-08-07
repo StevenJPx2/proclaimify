@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   app: {
     head: {
       title: "Proclaimify",
@@ -39,12 +40,16 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   fontMetrics: { fonts: ["Inter"] },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
-    "nuxt-icon",
+    "@nuxt/icon",
     "@nuxtjs/fontaine",
     "nuxt-svgo",
   ],
+
+  compatibilityDate: "2024-08-07",
 });
