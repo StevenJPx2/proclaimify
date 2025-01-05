@@ -44,12 +44,15 @@ export default defineNuxtConfig({
   fontMetrics: { fonts: ["Inter"] },
 
   modules: [
-    "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "@nuxt/icon",
+    "@nuxt/ui",
     "@nuxtjs/fontaine",
     "nuxt-svgo",
   ],
 
+  css: ["~/assets/main.css"],
+
   compatibilityDate: "2024-08-07",
 });
+

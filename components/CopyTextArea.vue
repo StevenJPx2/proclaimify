@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 defineProps({ desc: { type: String }, text: { type: String, required: true } });
 const { copy, copied } = useClipboard();
-const bus = useEventBus<boolean>("copied");
+const toast = useToast();
 
-watchEffect(() => {
-  bus.emit(copied.value);
+watch(copied, () => {
+  if (copied.value) toast.add({ color: "success", title: "Copied to clipboard!" });
 });
 </script>
 
