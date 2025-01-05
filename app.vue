@@ -27,7 +27,7 @@ const guessScale = useDebounceFn(
 );
 
 const lyrics = ref("");
-const { count, inc, dec, set, reset } = useCounter();
+const count = ref(0);
 
 const hasManuallyChangedChordFormat = ref(false);
 const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
@@ -58,7 +58,7 @@ watchDebounced(
   (val, oldVal) => {
     if (hasManuallyChangedChordFormat.value) return;
     fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
-    set(0);
+    count.value = 0;
 
     if (oldVal.trim() === "" && val.trim() !== "") guessScale();
   },
@@ -77,76 +77,80 @@ watchDebounced(
             class="min-h-[100px] min-w-[100px] text-primary aspect-square"
           />
         </div>
-        <div class="grid gap-3">
-          <label for="scale" class="block">
-            original scale
-            <u-input class="w-20" type="text" id="scale" v-model="scale" />
-            <u-button
-              icon="heroicons:sparkles-solid"
-              variant="ghost"
-              @click="guessScale"
-              class="ml-2"
-              :class="{
-                'animate-pulse': isGuessingScale,
-              }"
-            />
-          </label>
-          <label for="from-chord-format" class="block">
-            from chord format
-            <u-select
-              v-model="fromChordFormat"
-              :items="
-                chordTypesTuple.map(({ name, format }) => ({
-                  label: name,
-                  value: format,
-                }))
-              "
-              @blur="hasManuallyChangedChordFormat = true"
-            />
-          </label>
-          <label for="to-chord-format" class="block">
-            to chord format
-            <u-select
-              v-model="fromChordFormat"
-              :items="
-                chordTypesTuple.map(({ name, format }) => ({
-                  label: name,
-                  value: format,
-                }))
-              "
-            />
-          </label>
-        </div>
-      </section>
-
-      <section class="flex items-center mb-4">
-        <u-input-number
-          :value="count"
-          @change="
-            (e) => set((e.currentTarget as HTMLInputElement).valueAsNumber)
-          "
-        />
-        <u-button @click="reset()">0</u-button>
       </section>
 
       <section
         class="flex flex-col lg:grid gap-4 lg:grid-rows-2 lg:grid-cols-2 font-normal font-mono"
       >
-        <textarea
-          class="resize-none lg:row-span-full min-h-[24rem] bg-background border-4 border-primary rounded-lg p-2 placeholder:text-normal placeholder:opacity-50"
-          placeholder="Enter lyrics here..."
-          v-model="lyrics"
-          wrap="off"
-        />
-        <copy-text-area
-          v-for="(generatedLyrics, index) in [
-            { desc: 'Converted Lyrics', text: changedLyrics },
-            { desc: 'Lower Thirds', text: lowerThirdLyrics },
+        <div class="lg:row-span-full min-h-[24rem]">
+          <div class="flex gap-5">
+            <u-form-field label="original scale">
+              <u-input class="w-20" type="text" id="scale" v-model="scale" />
+              <u-button
+                icon="heroicons:sparkles-solid"
+                variant="ghost"
+                @click="guessScale"
+                class="ml-2"
+                :class="{
+                  'animate-pulse': isGuessingScale,
+                }"
+              />
+            </u-form-field>
+
+            <u-form-field label="from chord format">
+              <u-select
+                v-model="fromChordFormat"
+                :items="
+                  chordTypesTuple.map(({ name, format }) => ({
+                    label: name,
+                    value: format,
+                  }))
+                "
+                @blur="hasManuallyChangedChordFormat = true"
+              />
+            </u-form-field>
+          </div>
+          <u-textarea
+            class="resize-none"
+            placeholder="Enter lyrics here..."
+            :rows="24"
+            v-model="lyrics"
+            wrap="off"
+          />
+        </div>
+        <u-tabs
+          :items="[
+            { label: 'Converted Lyrics', slot: 'converted' },
+            { label: 'Lower Thirds', slot: 'lower' },
           ]"
-          :key="index"
-          :desc="generatedLyrics.desc"
-          :text="generatedLyrics.text"
-        />
+        >
+          <template #converted>
+            <div>
+              <div class="flex gap-2">
+                <u-form-field label="to chord format">
+                  <u-select
+                    v-model="fromChordFormat"
+                    :items="
+                      chordTypesTuple.map(({ name, format }) => ({
+                        label: name,
+                        value: format,
+                      }))
+                    "
+                  />
+                </u-form-field>
+
+                <section class="flex items-center mb-4">
+                  <u-input-number v-model="count" />
+                  <u-button @click="count = 0">0</u-button>
+                </section>
+              </div>
+              <copy-text-area desc="Converted Lyrics" :text="changedLyrics" />
+            </div>
+          </template>
+          <template #lower>
+            <copy-text-area desc="Lower Thirds" :text="lowerThirdLyrics" />
+          </template>
+        </u-tabs>
       </section>
 
       <dev-only>

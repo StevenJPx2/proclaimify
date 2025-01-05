@@ -3,8 +3,8 @@ defineProps({ desc: { type: String }, text: { type: String, required: true } });
 const { copy, copied } = useClipboard();
 const toast = useToast();
 
-watch(copied, () => {
-  if (copied.value) toast.add({ color: "success", title: "Copied to clipboard!" });
+watch(copied, (v) => {
+  if (v) toast.add({ color: "success", title: "Copied to clipboard!" });
 });
 </script>
 
