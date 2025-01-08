@@ -84,7 +84,10 @@ watchDebounced(
       >
         <div class="lg:row-span-full h-full flex flex-col">
           <div class="flex gap-5 mb-4">
-            <u-form-field label="original scale">
+            <u-form-field
+              :ui="{ container: 'flex items-center' }"
+              label="original scale"
+            >
               <u-input class="w-20" type="text" id="scale" v-model="scale" />
               <u-button
                 icon="heroicons:sparkles-solid"
