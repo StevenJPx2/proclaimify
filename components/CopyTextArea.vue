@@ -34,7 +34,7 @@ watch(copied, (v) => {
       </button>
     </div>
     <p
-      class="whitespace-pre overflow-scroll h-full max-h-[60vh] border-4 border-primary rounded-lg p-2"
+      class="whitespace-pre overflow-scroll h-full min-h-30 max-h-[60vh] border-1 border-primary rounded-lg py-1 px-2 after:text-sm after:opacity-30 empty:after:content-['No_text_to_display']"
     >
       {{ text }}
     </p>
