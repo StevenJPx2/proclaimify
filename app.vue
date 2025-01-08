@@ -80,7 +80,7 @@ watchDebounced(
       </section>
 
       <section
-        class="min-h-96 max-h-screen flex flex-col lg:grid lg:grid-cols-2 gap-4 font-normal font-mono"
+        class="min-h-96 flex flex-col lg:grid lg:grid-cols-2 gap-4 font-normal font-mono"
       >
         <div class="lg:row-span-full h-full flex flex-col">
           <div class="flex gap-5 mb-4">
@@ -113,7 +113,7 @@ watchDebounced(
 
           <u-textarea
             class="resize-none w-full h-full"
-            :ui="{ base: ['h-full'] }"
+            :ui="{ base: ['h-full min-h-80'] }"
             placeholder="Enter lyrics here..."
             :rows="0"
             v-model="lyrics"
@@ -175,8 +175,10 @@ watchDebounced(
       </section>
 
       <dev-only>
-        {{ scale }}
-        <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>
+        <div>
+          {{ scale }}
+          <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>
+        </div>
       </dev-only>
     </main>
   </u-app>
