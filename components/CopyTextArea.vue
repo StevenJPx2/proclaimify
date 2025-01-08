@@ -9,12 +9,19 @@ watch(copied, (v) => {
 </script>
 
 <template>
-  <div>
-    <div class="flex justify-between mb-2 text-primary">
-      <h3 class="font-inter">{{ desc }}</h3>
+  <div class="h-full flex flex-col">
+    <div class="flex justify-between mb-4 text-primary">
+      <div class="flex gap-5">
+        <slot name="toolbar">
+          <h3 class="font-inter">
+            {{ desc }}
+          </h3>
+        </slot>
+      </div>
       <button
         @click="copy(text)"
         :name="desc?.toLowerCase().split(' ').join('-')"
+        class="self-end flex items-end cursor-pointer"
       >
         <icon
           :name="
@@ -27,7 +34,7 @@ watch(copied, (v) => {
       </button>
     </div>
     <p
-      class="whitespace-pre overflow-scroll h-96 border-4 border-primary rounded-lg p-2"
+      class="whitespace-pre overflow-scroll h-full border-4 border-primary rounded-lg p-2"
     >
       {{ text }}
     </p>
