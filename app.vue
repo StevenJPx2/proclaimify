@@ -27,7 +27,7 @@ const guessScale = useDebounceFn(
 );
 
 const lyrics = ref("");
-const { count, inc, dec, set, reset } = useCounter();
+const count = ref(0);
 
 const hasManuallyChangedChordFormat = ref(false);
 const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
@@ -53,18 +53,12 @@ const getRelativeChordSpacing = (targetScale: string) => {
   return findChordStepIndex(targetScale) - findChordStepIndex(scale.value);
 };
 
-const copied = ref(false);
-const bus = useEventBus<boolean>("copied");
-bus.on((val) => {
-  copied.value = val;
-});
-
 watchDebounced(
   lyrics,
   (val, oldVal) => {
     if (hasManuallyChangedChordFormat.value) return;
     fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
-    set(0);
+    count.value = 0;
 
     if (oldVal.trim() === "" && val.trim() !== "") guessScale();
   },
@@ -73,113 +67,124 @@ watchDebounced(
 </script>
 
 <template>
-  <notification :appear="copied" text="Copied!" type="success" />
-  <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
-    <section class="flex flex-col lg:flex-row gap-5 items-center mb-6">
-      <div
-        class="rounded-lg border-4 border-primary py-4 w-full max-w-sm grid place-items-center"
+  <u-app>
+    <main class="max-w-screen-lg w-full mx-auto px-3 py-8">
+      <section class="flex flex-col lg:flex-row gap-5 items-center mb-6">
+        <div
+          class="rounded-lg border-4 border-primary py-4 w-full max-w-sm grid place-items-center"
+        >
+          <svgo-pcfy-logo
+            class="min-h-[100px] min-w-[100px] text-primary aspect-square"
+          />
+        </div>
+      </section>
+
+      <section
+        class="min-h-96 flex flex-col lg:grid lg:grid-cols-2 gap-4 font-normal font-mono"
       >
-        <svgo-pcfy-logo
-          class="min-h-[100px] min-w-[100px] text-primary aspect-square"
-        />
-      </div>
-      <div class="grid gap-3">
-        <label for="scale" class="block">
-          original scale
-          <input class="w-20" type="text" id="scale" v-model="scale" />
-          <button @click="guessScale" class="ml-2">
-            <icon
-              name="heroicons:sparkles-solid"
-              :class="{ 'animate-pulse': isGuessingScale }"
-              class="w-6 h-6"
-            />
-          </button>
-        </label>
-        <label for="from-chord-format" class="block">
-          from chord format
-          <select
-            v-model="fromChordFormat"
-            @blur="hasManuallyChangedChordFormat = true"
-          >
-            <option
-              v-for="chordType in chordTypesTuple"
-              :key="chordType.name"
-              :value="chordType.format"
+        <div class="lg:row-span-full h-full flex flex-col">
+          <div class="flex gap-5 mb-4">
+            <u-form-field
+              :ui="{ container: 'flex items-center' }"
+              label="original scale"
             >
-              {{ chordType.name }}
-            </option>
-          </select>
-        </label>
-        <label for="to-chord-format" class="block">
-          to chord format
-          <select v-model="toChordFormat">
-            <option
-              v-for="chordType in chordTypesTuple"
-              :key="chordType.name"
-              :value="chordType.format"
-            >
-              {{ chordType.name }}
-            </option>
-          </select>
-        </label>
-      </div>
-    </section>
+              <u-input class="w-20" type="text" id="scale" v-model="scale" />
+              <u-button
+                icon="heroicons:sparkles-solid"
+                variant="ghost"
+                @click="guessScale"
+                class="ml-2"
+                :class="{
+                  'animate-pulse': isGuessingScale,
+                }"
+              />
+            </u-form-field>
 
-    <section class="flex items-center mb-4">
-      <button class="btn !rounded-r-none !border-r-0" @click="dec()">-</button>
-      <div class="flex">
-        <input
-          class="!border-y-none !rounded-none !p-0 !pl-1 w-10"
-          type="number"
-          :value="count"
-          @change="
-            (e) => set((e.currentTarget as HTMLInputElement).valueAsNumber)
-          "
-        />
-        <input
-          v-if="!!scale"
-          class="!border-l-0 !rounded-none !p-0 !pl-1 w-10"
-          type="type"
-          :value="transposeChord(scale, count)"
-          @input="
-            (e) =>
-              set(
-                getRelativeChordSpacing(
-                  (e.currentTarget as HTMLInputElement).value,
-                ),
-              )
-          "
-        />
-      </div>
-      <button class="btn !rounded-l-none !border-l-0" @click="inc()">+</button>
-      <button class="btn ml-3" @click="reset()">0</button>
-    </section>
+            <u-form-field label="from chord format">
+              <u-select
+                v-model="fromChordFormat"
+                :items="
+                  chordTypesTuple.map(({ name, format }) => ({
+                    label: name,
+                    value: format,
+                  }))
+                "
+                @blur="hasManuallyChangedChordFormat = true"
+              />
+            </u-form-field>
+          </div>
 
-    <section
-      class="flex flex-col lg:grid gap-4 lg:grid-rows-2 lg:grid-cols-2 font-normal font-mono"
-    >
-      <textarea
-        class="resize-none lg:row-span-full min-h-[24rem] bg-background border-4 border-primary rounded-lg p-2 placeholder:text-normal placeholder:opacity-50"
-        placeholder="Enter lyrics here..."
-        v-model="lyrics"
-        wrap="off"
-      />
-      <copy-text-area
-        v-for="(generatedLyrics, index) in [
-          { desc: 'Converted Lyrics', text: changedLyrics },
-          { desc: 'Lower Thirds', text: lowerThirdLyrics },
-        ]"
-        :key="index"
-        :desc="generatedLyrics.desc"
-        :text="generatedLyrics.text"
-      />
-    </section>
+          <u-textarea
+            class="resize-none w-full h-full"
+            :ui="{ base: ['h-full min-h-80'] }"
+            placeholder="Enter lyrics here..."
+            :rows="0"
+            v-model="lyrics"
+            wrap="off"
+          />
+        </div>
+        <u-tabs
+          class="h-full"
+          :items="[
+            { label: 'Converted Lyrics', slot: 'converted' },
+            { label: 'Lower Thirds', slot: 'lower' },
+          ]"
+        >
+          <template #converted>
+            <copy-text-area :text="changedLyrics">
+              <template #toolbar>
+                <u-form-field label="to chord format">
+                  <u-select
+                    v-model="toChordFormat"
+                    :items="
+                      chordTypesTuple.map(({ name, format }) => ({
+                        label: name,
+                        value: format,
+                      }))
+                    "
+                  />
+                </u-form-field>
 
-    <dev-only>
-      {{ scale }}
-      <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>
-    </dev-only>
-  </main>
+                <u-form-field label="transpose">
+                  <div class="flex gap-2 items-center">
+                    <u-button
+                      :variant="count === 0 ? 'soft' : 'solid'"
+                      :disabled="count === 0"
+                      @click="count = 0"
+                    >
+                      0
+                    </u-button>
+                    <u-input-number class="max-w-24" v-model="count" />
+                    <u-input
+                      v-if="!!scale"
+                      class="w-9"
+                      :value="transposeChord(scale, count)"
+                      @update:model-value="
+                        (e) =>
+                          (count = getRelativeChordSpacing(
+                            e.toString().toUpperCase(),
+                          ))
+                      "
+                    />
+                  </div>
+                </u-form-field>
+              </template>
+            </copy-text-area>
+          </template>
+          <template #lower>
+            <copy-text-area :text="lowerThirdLyrics" />
+          </template>
+        </u-tabs>
+      </section>
+
+      <dev-only>
+        <div>
+          {{ scale }}
+          <pre>{{ JSON.stringify(encodedLyrics, null, 2) }}</pre>
+        </div>
+      </dev-only>
+    </main>
+  </u-app>
 </template>
 
 <style lang="scss">
@@ -189,6 +194,7 @@ watchDebounced(
   --color-primary: #fb8661;
   --color-background: #fff;
   --color-normal: #000;
+  --ui-primary: #fb8661;
 
   @media (prefers-color-scheme: dark) {
     --color-primary: #fff;

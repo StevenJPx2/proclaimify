@@ -1,4 +1,4 @@
-import { ChordLyricFormat, EncodedLyric } from "./types";
+import type { ChordLyricFormat, EncodedLyric } from "./types";
 
 export default <ChordLyricFormat>{
   encodeLyrics(lyrics) {
@@ -28,7 +28,7 @@ export default <ChordLyricFormat>{
           lyrics: [
             cursor === 0 ? prospectiveLyrics[cursor] : "",
             prospectiveLyrics[
-            Math.min(cursor + 1, prospectiveLyrics.length - 1)
+              Math.min(cursor + 1, prospectiveLyrics.length - 1)
             ],
           ],
           chord: prospectiveChords[cursor].replaceAll(/[\[\]]/g, ""),
@@ -53,7 +53,7 @@ export default <ChordLyricFormat>{
             }
             return `${lyrics[0]}${finalChordEmbed}${lyrics[1]}`;
           })
-          .join("")
+          .join(""),
       )
       .join("\n");
   },
