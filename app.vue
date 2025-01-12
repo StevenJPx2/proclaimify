@@ -194,14 +194,13 @@ watchDebounced(
   --color-primary: #fb8661;
   --color-background: #fff;
   --color-normal: #000;
+  --ui-primary: #fb8661;
 
   @media (prefers-color-scheme: dark) {
     --color-primary: #fff;
     --color-background: #fb8661;
     --color-normal: #fff;
   }
-
-  --ui-primary: #fb8661;
 }
 
 body {

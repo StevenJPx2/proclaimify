@@ -1,10 +1,12 @@
 export * from "./lyricTypes";
 export * from "./lyricTypes/types";
-import { EncodedLyrics } from "./lyricTypes/types";
+import { type EncodedLyrics } from "./lyricTypes/types";
 
 export const songSectionRegex =
-  /^(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude|outro)\s?\d*/i;
+  /^[\(\[\{]?(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude|outro)\s?\d*[\)\]\}]?/i;
+
 export const notePattern = "[A-G][b#]?";
+
 export function chordRegex() {
   const altered = `(?:2|5|dim(5|7)?|aug5?|\\+5?|-5?)`;
   const minor = "(?:mi?n?)";
@@ -38,7 +40,7 @@ export function findChordStepIndex(chord: string): number {
   if (!note) return 0;
 
   return chordSteps.findIndex((val) =>
-    Array.isArray(val) ? val.includes(note[0]) : val === note[0]
+    Array.isArray(val) ? val.includes(note[0]) : val === note[0],
   );
 }
 
@@ -68,7 +70,7 @@ export function transposeChord(chords: string, increment: number): string {
               ? note[0].includes("b")
                 ? transposedNote[1]
                 : transposedNote[0]
-              : transposedNote
+              : transposedNote,
           );
         })
         .join("/");
@@ -78,24 +80,40 @@ export function transposeChord(chords: string, increment: number): string {
 
 export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
   let newLyrics = "";
+
   const lyricArray = encodedLyrics.map((line) =>
-    line.map(({ lyrics }) => lyrics.join("")).join("")
+    line.map(({ lyrics }) => lyrics.join("")).join(""),
   );
 
   for (let lineNumber = 0; lineNumber < lyricArray.length; lineNumber++) {
-    const line = lyricArray[lineNumber];
-    if (songSectionRegex.test(line.trimStart()) || line.trim() === "") {
+    const line = lyricArray[lineNumber].trim();
+
+    if (songSectionRegex.test(line) || line === "") {
       newLyrics += line + "\n";
       continue;
     }
+
     const secondLine =
       lyricArray[Math.min(lineNumber + 1, lyricArray.length - 1)].split(" ");
-    secondLine[0] = !/(Jesus|God|Yahweh|I|Him|You|He|Christ)/.test(
-      secondLine[0]
-    )
-      ? secondLine[0].toLowerCase()
-      : secondLine[0];
-    newLyrics += `${line.trimEnd()}, ${secondLine.join(" ")}\n`;
+
+    if (!/(Jesus|God|Yahweh|I|Him|You|He|Christ)/.test(secondLine[0])) {
+      secondLine[0] = secondLine[0].toLowerCase();
+    }
+
+    const secondLineText = secondLine.join(" ").trim();
+
+    const previousLine = (lyricArray[Math.max(lineNumber - 1, 0)] ?? "").trim();
+    const thirdLine =
+      lyricArray[Math.min(lineNumber + 2, lyricArray.length - 1)].trim();
+
+    if (previousLine === "" && thirdLine === "") {
+      newLyrics += `${line}\n${secondLineText}\n`;
+    } else if (secondLineText === "") {
+      newLyrics += line + "\n";
+    } else {
+      newLyrics += `${line}, ${secondLineText}` + "\n";
+    }
+
     lineNumber++;
   }
 

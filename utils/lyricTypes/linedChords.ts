@@ -1,5 +1,5 @@
 import { songSectionRegex } from "..";
-import { ChordLyricFormat, EncodedLyrics } from "./types";
+import type { ChordLyricFormat, EncodedLyrics } from "./types";
 
 export default <ChordLyricFormat>{
   encodeLyrics(lyrics) {
@@ -35,18 +35,20 @@ export default <ChordLyricFormat>{
 
         const encoded = {
           lyrics: [
-            prospectiveLyric.slice(cursorPos, prefixWhiteSpaceNumber),
+            prospectiveLyric
+              .slice(cursorPos, prefixWhiteSpaceNumber)
+              .trimStart(),
             prospectiveLyric.slice(
               cursorPos + prefixWhiteSpaceNumber,
               index === prospectiveChords.length - 1
                 ? undefined
                 : Math.min(
-                  cursorPos +
-                  prefixWhiteSpaceNumber +
-                  suffixWhiteSpaceNumber +
-                  chord.trim().length,
-                  line.length
-                )
+                    cursorPos +
+                      prefixWhiteSpaceNumber +
+                      suffixWhiteSpaceNumber +
+                      chord.trim().length,
+                    line.length,
+                  ),
             ),
           ] as [string, string],
           chord: chord.trim(),
@@ -70,7 +72,7 @@ export default <ChordLyricFormat>{
         line
           .filter(
             (value): value is { lyrics: [string, string]; chord: string } =>
-              !!value.chord
+              !!value.chord,
           )
           .forEach(({ lyrics, chord }) => {
             if (lyrics.join("").trim() === "") {
