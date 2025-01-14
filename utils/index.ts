@@ -106,18 +106,17 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
     const thirdLine =
       lyricArray[Math.min(lineNumber + 2, lyricArray.length - 1)].trim();
 
-    if (previousLine === "" && thirdLine === "") {
-      newLyrics += `${line}\n${secondLineText}`;
-    } else if (secondLineText === "") {
-      newLyrics += line;
-    } else {
-      const lineWords = line.match(/([\w\s]*)[\.\?\!,;:]+\s*$/);
-      if (lineWords) {
-        newLyrics += lineWords[1];
-      } else {
-        newLyrics += line;
-      }
+    const lineWords = line.match(/(.*)[\.\?\!,;:]+\s*$/);
 
+    if (lineWords) {
+      newLyrics += lineWords[1];
+    } else {
+      newLyrics += line;
+    }
+
+    if (previousLine === "" && thirdLine === "") {
+      newLyrics += `\n${secondLineText}`;
+    } else if (secondLineText !== "") {
       newLyrics += `, ${secondLineText}`;
     }
 
