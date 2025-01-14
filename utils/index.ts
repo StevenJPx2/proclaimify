@@ -106,7 +106,7 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
     const thirdLine =
       lyricArray[Math.min(lineNumber + 2, lyricArray.length - 1)].trim();
 
-    const lineWords = line.match(/(.*)[\.\?\!,;:]+\s*$/);
+    const lineWords = line.match(/(.*?)[\.\?\!,;:]+\s*$/);
 
     if (lineWords) {
       newLyrics += lineWords[1];
