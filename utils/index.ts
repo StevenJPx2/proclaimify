@@ -111,8 +111,9 @@ export function makeLowerThirds(encodedLyrics: EncodedLyrics) {
     } else if (secondLineText === "") {
       newLyrics += line;
     } else {
-      if (line.match(/\w+[\.\?\!,;:]\s*$/)) {
-        newLyrics += line.slice(0, -1);
+      const lineWords = line.match(/([\w\s]*)[\.\?\!,;:]+\s*$/);
+      if (lineWords) {
+        newLyrics += lineWords[1];
       } else {
         newLyrics += line;
       }
