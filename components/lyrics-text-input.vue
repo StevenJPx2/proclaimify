@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-const scale = defineModel<string | undefined>("scale", {
+const scale = defineModel<string>("scale", {
   required: true,
 });
-const encodedLyrics = defineModel<EncodedLyrics | undefined>({
+const encodedLyrics = defineModel<EncodedLyrics>({
   required: true,
 });
 
@@ -40,9 +40,9 @@ watchDebounced(
     if (hasManuallyChangedChordFormat.value) return;
     fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
 
-    if (oldVal.trim() === "" && val.trim() !== "") guessScale();
+    if (oldVal && oldVal.trim() === "" && val.trim() !== "") guessScale();
   },
-  { debounce: 50 },
+  { debounce: 50, immediate: true },
 );
 
 const hasManuallyChangedChordFormat = ref(false);
@@ -68,7 +68,7 @@ const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
         />
       </u-form-field>
 
-      <u-form-field label="from chord format">
+      <u-form-field label="from format">
         <u-select
           v-model="fromChordFormat"
           :items="

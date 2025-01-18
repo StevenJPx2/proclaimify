@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const { encodedLyrics } = defineProps<{
-  encodedLyrics: EncodedLyrics | undefined;
+  encodedLyrics: EncodedLyrics;
 }>();
 
 const lowerThirdLyrics = computed(() => {

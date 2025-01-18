@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { EncodedLyrics } from "./utils";
-const scale = ref<string>();
-const encodedLyrics = ref<EncodedLyrics>();
+const scale = ref<string>("");
+const encodedLyrics = ref<EncodedLyrics>([]);
 </script>
 
 <template>
