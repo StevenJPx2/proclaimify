@@ -1,4 +1,4 @@
-import { songSectionRegex } from "..";
+import { songSectionRegex } from "../constants";
 import type { ChordLyricFormat, EncodedLyrics } from "./types";
 
 export default <ChordLyricFormat>{

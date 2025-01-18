@@ -130,3 +130,29 @@ export const chordSteps: (string | [string, string])[] = [
   "G",
   ["G#", "Ab"],
 ];
+
+export const songSectionRegex =
+  /^[\(\[\{]?(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude|outro)\s?\d*[\)\]\}]?/i;
+
+export const notePattern = "[A-G][b#]?";
+
+export function chordRegex() {
+  const altered = `(?:2|5|dim(5|7)?|aug5?|\\+5?|-5?)`;
+  const minor = "(?:mi?n?)";
+  const major = "(?:maj?|Ma?j?)";
+  const majorableExt = `(?:6|7|9|11|13)`;
+  const ext = `(?:4|6|7|9|11|13|6\\/9)`;
+  const _mod = "(?:[b-](5|6|9|13)|[#+](4|5|9|11))";
+  const mod = `(?:\\(${_mod}\\)|${_mod})`;
+  const sus = "(?:sus(2|4|24|2sus4)?)";
+  const add = "(?:add[b#]?(?:2|4|6|7|9|11|13))";
+  const bass = `(?:\\/${notePattern})`;
+
+  const lookahead = "(?=$| )";
+  const source = `${notePattern}${`(?:${altered}|${
+    `(?:${minor}?(?:${ext}|${major}?${majorableExt})?)` +
+    `${mod}*${sus}?${mod}*${add}?`
+  })`}${bass}?${lookahead}`;
+
+  return source;
+}

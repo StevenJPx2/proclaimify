@@ -1,69 +1,7 @@
 <script lang="ts" setup>
-import type { EncodedLyrics, ChordLyricFormat } from "./utils";
-
+import type { EncodedLyrics } from "./utils";
 const scale = ref<string>();
-const isGuessingScale = ref(false);
-
-const guessScale = useDebounceFn(
-  async () => {
-    scale.value = await $fetch<string>("/api/guess-scale", {
-      method: "post",
-      onRequest() {
-        isGuessingScale.value = true;
-      },
-      onResponse() {
-        isGuessingScale.value = false;
-      },
-      body: {
-        chords: encodedLyrics.value
-          .flat()
-          .flatMap((lyric) => (lyric.chord ? [lyric.chord.trim()] : []))
-          .join(" "),
-      },
-    });
-  },
-
-  1000,
-);
-
-const lyrics = ref("");
-const count = ref(0);
-
-const hasManuallyChangedChordFormat = ref(false);
-const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
-const toChordFormat = ref<ChordLyricFormat>(chordTypesTuple[1].format);
-
-const encodedLyrics = computed<EncodedLyrics>(() =>
-  fromChordFormat.value.encodeLyrics(lyrics.value.split("\n")).map((line) =>
-    line.map((val) => ({
-      ...val,
-      chord: !val.chord ? undefined : transposeChord(val.chord, count.value),
-    })),
-  ),
-);
-
-const changedLyrics = computed(() =>
-  toChordFormat.value.decodeLyrics(encodedLyrics.value),
-);
-
-const lowerThirdLyrics = computed(() => makeLowerThirds(encodedLyrics.value));
-
-const getRelativeChordSpacing = (targetScale: string) => {
-  if (!scale.value) return count.value;
-  return findChordStepIndex(targetScale) - findChordStepIndex(scale.value);
-};
-
-watchDebounced(
-  lyrics,
-  (val, oldVal) => {
-    if (hasManuallyChangedChordFormat.value) return;
-    fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
-    count.value = 0;
-
-    if (oldVal.trim() === "" && val.trim() !== "") guessScale();
-  },
-  { debounce: 50 },
-);
+const encodedLyrics = ref<EncodedLyrics>();
 </script>
 
 <template>
@@ -82,47 +20,11 @@ watchDebounced(
       <section
         class="min-h-96 flex flex-col lg:grid lg:grid-cols-2 gap-4 font-normal font-mono"
       >
-        <div class="lg:row-span-full h-full flex flex-col">
-          <div class="flex gap-5 mb-4">
-            <u-form-field
-              :ui="{ container: 'flex items-center' }"
-              label="original scale"
-            >
-              <u-input class="w-20" type="text" id="scale" v-model="scale" />
-              <u-button
-                icon="heroicons:sparkles-solid"
-                variant="ghost"
-                @click="guessScale"
-                class="ml-2"
-                :class="{
-                  'animate-pulse': isGuessingScale,
-                }"
-              />
-            </u-form-field>
-
-            <u-form-field label="from chord format">
-              <u-select
-                v-model="fromChordFormat"
-                :items="
-                  chordTypesTuple.map(({ name, format }) => ({
-                    label: name,
-                    value: format,
-                  }))
-                "
-                @blur="hasManuallyChangedChordFormat = true"
-              />
-            </u-form-field>
-          </div>
-
-          <u-textarea
-            class="resize-none w-full h-full"
-            :ui="{ base: ['h-full min-h-80'] }"
-            placeholder="Enter lyrics here..."
-            :rows="0"
-            v-model="lyrics"
-            wrap="off"
-          />
-        </div>
+        <lyrics-text-input
+          class="lg:row-span-full"
+          v-model="encodedLyrics"
+          v-model:scale="scale"
+        />
         <u-tabs
           class="h-full"
           :items="[
@@ -131,48 +33,10 @@ watchDebounced(
           ]"
         >
           <template #converted>
-            <copy-text-area :text="changedLyrics">
-              <template #toolbar>
-                <u-form-field label="to chord format">
-                  <u-select
-                    v-model="toChordFormat"
-                    :items="
-                      chordTypesTuple.map(({ name, format }) => ({
-                        label: name,
-                        value: format,
-                      }))
-                    "
-                  />
-                </u-form-field>
-
-                <u-form-field label="transpose">
-                  <div class="flex gap-2 items-center">
-                    <u-button
-                      :variant="count === 0 ? 'soft' : 'solid'"
-                      :disabled="count === 0"
-                      @click="count = 0"
-                    >
-                      0
-                    </u-button>
-                    <u-input-number class="max-w-24" v-model="count" />
-                    <u-input
-                      v-if="!!scale"
-                      class="w-9"
-                      :value="transposeChord(scale, count)"
-                      @update:model-value="
-                        (e) =>
-                          (count = getRelativeChordSpacing(
-                            e.toString().toUpperCase(),
-                          ))
-                      "
-                    />
-                  </div>
-                </u-form-field>
-              </template>
-            </copy-text-area>
+            <converted-lyrics :encoded-lyrics="encodedLyrics" :scale="scale" />
           </template>
           <template #lower>
-            <copy-text-area :text="lowerThirdLyrics" />
+            <lower-thirds :encoded-lyrics="encodedLyrics" :scale="scale" />
           </template>
         </u-tabs>
       </section>
