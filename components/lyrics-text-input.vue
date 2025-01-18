@@ -40,7 +40,7 @@ watchDebounced(
     if (hasManuallyChangedChordFormat.value) return;
     fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
 
-    if (oldVal && oldVal.trim() === "" && val.trim() !== "") guessScale();
+    if (oldVal?.trim() === "" && val.trim() !== "") guessScale();
   },
   { debounce: 50, immediate: true },
 );
