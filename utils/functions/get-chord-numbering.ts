@@ -23,7 +23,5 @@ export function getChordNumbering(scale: string) {
     }
   }
 
-  console.log(chordNumbering);
-
   return chordNumbering;
 }
