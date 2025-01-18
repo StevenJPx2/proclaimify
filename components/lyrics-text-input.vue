@@ -4,7 +4,6 @@ const scale = defineModel<string | undefined>("scale", {
 });
 const encodedLyrics = defineModel<EncodedLyrics | undefined>({
   required: true,
-  default: [],
 });
 
 const lyrics = ref("");
