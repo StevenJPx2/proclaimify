@@ -4,6 +4,10 @@ export default <ChordLyricFormat>{
   encodeLyrics(lyrics) {
     const insetRegex = /\[.+?\]/g;
     return lyrics.map<EncodedLyric[]>((line) => {
+      if (line.match(songSectionRegex)) {
+        return [{ lyrics: ["", line] }];
+      }
+
       const prospectiveLyrics = line.split(insetRegex);
       const prospectiveChords = line.match(insetRegex);
 

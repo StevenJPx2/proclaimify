@@ -9,6 +9,9 @@ const encodedLyrics = defineModel<EncodedLyrics>({
 const lyrics = ref("");
 const isGuessingScale = ref(false);
 
+const hasManuallyChangedChordFormat = ref(false);
+const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
+
 const guessScale = useDebounceFn(
   async () => {
     scale.value = await $fetch<string>("/api/guess-scale", {
@@ -33,20 +36,18 @@ const guessScale = useDebounceFn(
 );
 
 watchDebounced(
-  lyrics,
-  (val, oldVal) => {
-    encodedLyrics.value = fromChordFormat.value.encodeLyrics(val.split("\n"));
+  [lyrics, fromChordFormat] as const,
+  ([val, chordFormat], [oldVal]) => {
+    encodedLyrics.value = chordFormat.encodeLyrics(val.split("\n"));
 
     if (hasManuallyChangedChordFormat.value) return;
+
     fromChordFormat.value = chordTypesObj[detectChordFormat(val)];
 
     if (oldVal?.trim() === "" && val.trim() !== "") guessScale();
   },
-  { debounce: 50, immediate: true },
+  { debounce: 50 },
 );
-
-const hasManuallyChangedChordFormat = ref(false);
-const fromChordFormat = ref<ChordLyricFormat>(chordTypesTuple[0].format);
 </script>
 
 <template>
