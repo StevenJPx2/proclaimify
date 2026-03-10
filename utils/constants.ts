@@ -132,11 +132,11 @@ export const chordSteps: (string | [string, string])[] = [
 ];
 
 export const songSectionRegex =
-  /^[\(\[\{]?(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude|outro)\s?\d*[\)\]\}]?/i;
+  /^[([{]?(intro|chorus|refrain|verse|v|bridge|tag|pre[-\s]?chorus|interlude|outro)\s?\d*[)\]}]?/i;
 
 export const notePattern = "[A-G][b#]?";
 
-export function chordRegex() {
+export const chordRegex = (() => {
   const altered = `(?:2|5|dim(5|7)?|aug5?|\\+5?|-5?)`;
   const minor = "(?:mi?n?)";
   const major = "(?:maj?|Ma?j?)";
@@ -155,4 +155,4 @@ export function chordRegex() {
   })`}${bass}?${lookahead}`;
 
   return source;
-}
+})();

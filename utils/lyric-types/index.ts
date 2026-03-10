@@ -1,13 +1,13 @@
-import { Tuple } from "../types";
-import type { ChordFormat } from "./types";
+import type { Tuple } from "../types";
+import insetChords from "./inset-chords";
 
-import linedChords from "./linedChords";
-import insetChords from "./insetChords";
+import linedChords from "./lined-chords";
+import type { ChordFormat, ChordLyricFormat } from "./types";
 
 export function detectChordFormat(song: string): ChordFormat {
   // Regular expression to extract text within square brackets
   const bracketPattern = /\[.*?\]/g;
-  const regex = new RegExp(chordRegex());
+  const regex = new RegExp(chordRegex);
   let match;
 
   while ((match = bracketPattern.exec(song)) !== null) {

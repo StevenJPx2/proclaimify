@@ -1,9 +1,9 @@
+import { chordRegex, notePattern } from "../constants";
 import { findChordStepIndex } from "./find-chord-step-index";
 import { mod } from "./mod";
-import { chordRegex, notePattern } from "../constants";
 
 export function transposeChord(chords: string, increment: number): string {
-  const splitChords = chords.match(new RegExp(chordRegex() + "\\s*", "g"));
+  const splitChords = chords.match(new RegExp(chordRegex + "\\s*", "g"));
 
   if (!splitChords) return chords;
 
@@ -21,6 +21,8 @@ export function transposeChord(chords: string, increment: number): string {
 
           const transposedNote =
             chordSteps[mod(increment + index, chordSteps.length)];
+
+          if (!transposedNote) return chord;
 
           return chord.replace(
             noteRegex,

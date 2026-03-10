@@ -13,8 +13,11 @@ export function getChordNumbering(scale: string) {
 
   for (let i = 0; i < indexSkips.length; i++) {
     const skip = indexSkips[i];
+
+    if (skip === undefined) continue;
+
     index = mod(index + skip, chordSteps.length);
-    let selectedChord: string[] | string = chordSteps[index];
+    let selectedChord: string[] | string = chordSteps[index]!;
 
     if (!Array.isArray(selectedChord)) selectedChord = [selectedChord];
 

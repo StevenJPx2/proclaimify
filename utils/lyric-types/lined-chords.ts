@@ -4,12 +4,31 @@ import type { ChordLyricFormat, EncodedLyrics } from "./types";
 export default <ChordLyricFormat>{
   encodeLyrics(lyrics) {
     const encodedLyrics: EncodedLyrics = [];
-    let lastLyricPos = () => encodedLyrics.length - 1;
+    const lastLyricPos = () => encodedLyrics.length - 1;
+
+    const testLineForChords = (line: string) => {
+      const chordSectionRegex = new RegExp("\\s*?" + chordRegex + "\\s*", "g");
+      const prospectiveChords = line.match(chordSectionRegex);
+
+      const splitLines = line.split(/\s+/).filter((line) => line !== "");
+
+      if (
+        !prospectiveChords ||
+        splitLines.length !== prospectiveChords.length
+      ) {
+        return null;
+      }
+
+      return prospectiveChords;
+    };
 
     for (let lineNumber = 0; lineNumber < lyrics.length; lineNumber++) {
       const line = lyrics[lineNumber];
-      const regex = new RegExp("\\s*?" + chordRegex() + "\\s*", "g");
-      const prospectiveChords = line.match(regex);
+
+      if (!line) continue;
+
+      const prospectiveChords = testLineForChords(line);
+
       if (!prospectiveChords) {
         encodedLyrics.push([{ lyrics: ["", line] }]);
         continue;
@@ -18,10 +37,17 @@ export default <ChordLyricFormat>{
       }
 
       let prospectiveLyric = "";
+
       if (lineNumber < lyrics.length - 1) {
         const nextLine = lyrics[lineNumber + 1];
-        if (regex.test(nextLine) || songSectionRegex.test(nextLine)) {
-          encodedLyrics[lastLyricPos()].push({ lyrics: ["", ""], chord: line });
+
+        if (!nextLine) continue;
+
+        if (testLineForChords(nextLine) || songSectionRegex.test(nextLine)) {
+          encodedLyrics[lastLyricPos()]?.push({
+            lyrics: ["", ""],
+            chord: line,
+          });
           continue;
         }
         prospectiveLyric = nextLine;
@@ -56,7 +82,7 @@ export default <ChordLyricFormat>{
 
         cursorPos += chord.length;
 
-        encodedLyrics[lastLyricPos()].push(encoded);
+        encodedLyrics[lastLyricPos()]?.push(encoded);
       });
 
       lineNumber++;

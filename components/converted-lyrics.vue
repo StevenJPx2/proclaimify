@@ -27,6 +27,8 @@ const changedLyrics = computed(() => {
               chordNumbering.value[note]?.toString() ??
               transposeChord(note, count.value),
           );
+          if (RegExp(/\d/).test(chord[1]))
+            chord = `${chord[0]}(${chord.slice(1)})`;
         } else {
           chord = transposeChord(chord, count.value);
         }
