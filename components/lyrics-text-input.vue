@@ -22,13 +22,7 @@ const guessScale = useDebounceFn(
       onResponse() {
         isGuessingScale.value = false;
       },
-      body: {
-        chords:
-          encodedLyrics.value
-            ?.flat()
-            .flatMap((lyric) => (lyric.chord ? [lyric.chord.trim()] : []))
-            .join(" ") ?? "",
-      },
+        body: makeScaleState(encodedLyrics.value ?? []),
     });
   },
 
