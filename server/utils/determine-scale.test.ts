@@ -27,11 +27,14 @@ describe("determineScale", () => {
           instructions:
             "The state is JSON: each key names a stanza, and each array contains " +
             "the chord string for each line in that stanza. Which note is the " +
-            "tonic and key center of the full song? Use the overall harmonic " +
-            "resolution, not the root of the first chord.",
-          criteria: expect.objectContaining({
-            C: "C natural root",
-            Bb: "B flat root",
+            "the tonic and key center of the full song as a major key. For genuine " +
+            "relative-minor harmony, return its relative major (the minor tonic is " +
+            "scale degree 6), such as G minor -> Bb. Do not mechanically convert " +
+            "modal or ambiguous progressions. Use the overall harmonic resolution, " +
+            "not the root of the first chord.",
+            criteria: expect.objectContaining({
+            C: "C major key",
+            Bb: "B flat major key",
           }),
         },
       },
